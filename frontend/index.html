@@ -1,16 +1,142 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dinux</title>
-    <link rel="stylesheet" href="styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DINUX Website</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Dinux</h1>
-        <p>Api test</p>
-        <button id="showDinosaursBtn">Show Dinosaurs</button>
-    </div>
-    <script src="script.js"></script>
+    <!-- Navbar Section -->
+    <nav class="navbar">
+        <div class="navbar__container">
+            <a href="./index.html" id="navbar__logo">DINUX</a>
+            <div class="navbar__toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="navbar__menu">
+                <li class="navbar__item">
+                    <a href="./index.html" class="navbar__links">
+                        Home
+                    </a>
+                </li>
+                <li class="navbar__item">
+                    <a href="/aoubt/about.html" class="navbar__links">
+                        About 
+                    </a>
+                </li>
+                <li class="navbar__item">
+                    <a href="/test1/test1.html" class="navbar__links">
+                        Test
+                    </a>
+                </li>
+                <li class="navbar__btn">
+                    <a href="/signup/signup.html" class="button">
+                        Sign Up
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+     <div class="main">
+        <div class="main__img--container">
+          <img src="assets/images/jurassic-world-therizinosaurus.avif" alt="pic" id="main__img">
+        </div>
+          <div class="main__container">
+            <div class="main__content">
+                <h1>THIS IS </h1>
+                <h2>DINUX PARK</h2>
+                <p>See what makes us unique.</p>
+                <button class="main__btn">
+                    <a href="/">Get Started</a>
+                </button>
+            </div>
+          </div>
+     </div>
+
+     <!-- Services Section -->
+     <div class="services">
+        <h1>Read more and become an expert </h1>
+        <div class="services__container">
+            <div class="services__card">
+                <h2>Most popular dinos</h2>
+                <p>T-rex, sinosaurus and much more...</p>
+                <button>Read more</button>
+            </div>
+            <div class="services__card">
+                <h2>Most dangerous</h2>
+                <p>Carnivores, gigantic creatures...</p>
+                <button>Read more</button>
+            </div>
+        </div>
+     </div>
+
+     <!-- Footer Section -->
+      <div class="footer__container">
+        <div class="footer__links">
+            <div class="footer__link--wrapper">
+                <div class="footer__link--items">
+                    <h2>About us</h2>
+                    <a href="/">How it works</a>
+                    <a href="/">Testimonals</a>
+                    <a href="/">Careers</a>
+                    <a href="/">Investments</a>
+                    <a href="/">Terms of Service</a>
+                </div>
+                <div class="footer__link--items">
+                    <h2>About us</h2>
+                    <a href="/">How it works</a>
+                    <a href="/">Testimonals</a>
+                    <a href="/">Careers</a>
+                    <a href="/">Investments</a>
+                </div>
+                <div class="footer__link--items">
+                    <h2>About us</h2>
+                    <a href="/">How it works</a>
+                    <a href="/">Testimonals</a>
+                    <a href="/">Careers</a>
+                    <a href="/">Investments</a>
+                    <a href="/">Terms of Service</a>
+                </div>
+                <div class="footer__link--items">
+                    <h2>About us</h2>
+                    <a href="/">Facebook</a>
+                    <a href="/">Twitter</a>
+                    <a href="/">Youtube</a>
+                    <a href="/">Linkedin</a>
+                </div>
+            </div>
+        </div>
+            <div class="social__media">
+                <div class="social__media--wrap">
+                    <div class="footer__logo">
+                        <a href="/" id="footer__logo" class="fas fagem">
+                        </i>DINUX
+                        </a>
+                    </div>
+                    <p class="website__rights">DINUX 2025 All rights reserved</p>
+                    <div class="social__icons">
+                        <a href="/" class="social__icon--link" target="_blank">
+                            <i class="fab fa-facebook"></i>
+                        </a>
+                        <a href="/" class="social__icon--link" target="_blank">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="/" class="social__icon--link" target="_blank">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                        <a href="/" class="social__icon--link" target="_blank">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+      </div>
+
+    <script src="./assets/js/main.js"></script>
 </body>
 </html>
