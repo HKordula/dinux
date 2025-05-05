@@ -309,7 +309,8 @@
 
 /* Mobile Responsive */
 @media  screen and (max-width: 768px) {
-    .main__container {
+    .main__container,
+    .main__login--container {
         display: grid;
         grid-template-columns: auto;
         align-items: center;
@@ -319,32 +320,32 @@
         height: 90vh;
     }
 
-    .main__content h1 {
+    .main__content, .main__login--content h1 {
         font-size: 2.5rem;
         margin-top: 2rem;
     }
 
-    .main__content h2 {
+    .main__content, .main__login--content h2 {
         font-size: 3rem;
     }
 
-    .main__content p {
+    .main__content, .main__login--content p {
         margin-top: 1rem;
         font-size: 1.5rem;
     }
 }
 
 @media screen and (max-width:  480px) {
-    .main__content h1 {
+    .main__content, .main__login--content h1 {
         font-size: 2rem;
         margin-top: 3rem;
     }
 
-    .main__content h2 {
+    .main__content, .main__login--content h2 {
         font-size: 2rem;
     }
 
-    .main__content p {
+    .main__content, .main__login--content p {
         margin-top: 2rem;
         font-size: 1.5rem;
     }
@@ -606,6 +607,64 @@
     
 }
 
+/* Sign In */
+.main__login--container {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    justify-self: center;
+    margin: 0 auto;
+    height: 70vh;
+    background-color: transparent;
+    z-index: 2;
+    width: 50%;
+    max-width: 1300px;
+    margin-top: 8%;
+    margin-bottom: 7%;
+    padding: 0 20%;
+    border: 2px solid rgba(255, 255, 255, .5);
+    border-radius: 20px;
+}
+
+.main__login--content h1 {
+    font-size: 4rem;
+    background-color: transparent;
+    background-image: linear-gradient(to top, #CCC 0%, #DDD 100%);
+    background-size: 100%;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+}
+
+.main__login--content h2 {
+    font-size: 4rem;
+    background-color: transparent;
+    background-image: linear-gradient(to top, #989F9E 0%, #A8AF9E 100%);
+    background-size: 100%;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -moz-text-fill-color: transparent;
+}
+
+.main__login--content p {
+    margin-top: 1rem;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #fff;
+}
+.login__input--box {
+
+}
+
+.remember__me--box {
+
+}
+
+/* palette for styling */
 .palette {
   background: #333D29;
   background: #414833;
@@ -618,3 +677,5 @@
   background: #7F4F24;
   background: #582F0E;
 }
+
+

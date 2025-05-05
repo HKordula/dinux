@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DINUX Website</title>
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/styles.css">
 </head>
 <body>
     <!-- Navbar Section -->
@@ -18,7 +18,7 @@
             </div>
             <ul class="navbar__menu">
                 <li class="navbar__item">
-                    <a href="./index.html" class="navbar__links">
+                    <a href="../index.html" class="navbar__links">
                         Home
                     </a>
                 </li>
@@ -33,7 +33,7 @@
                     </a>
                 </li>
                 <li class="navbar__btn">
-                    <a href="./signin/index.html" class="button">
+                    <a href="./index.html" class="button">
                         Sign In
                     </a>
                 </li>
@@ -41,39 +41,44 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Login Section -->
      <div class="main">
         <div class="main__img--container">
-          <img src="assets/images/main-img.jpg" alt="pic" id="main__img">
+          <img src="../assets/images/dense-jungle-canopy-with-vibrant-varied-flora-hiding-mysterious-creatures-within-its-shadows.jpg" alt="pic" id="main__img">
         </div>
-          <div class="main__container">
-            <div class="main__content">
-                <h1>THIS IS </h1>
-                <h2>DINUX PARK</h2>
-                <p>See what makes us unique.</p>
-                <button class="main__btn">
-                    <a href="/">Get Started</a>
+          <div class="main__login--container">
+            <div class="main__login--content">
+                <h1>Login</h1>
+                <div class="login__input--box">
+                  <span>📧</span> 
+                  <input type="email" name="email" value="" required>
+                  <label for="email">Email</label>
+                </div>
+
+                <div class="login__input--box">
+                  <span>🔒</span> 
+                  <input type="password" name="password" value="" required>
+                  <label for="password">Password</label>
+                </div>
+                <div class="remember__me--box">
+                 <label for="remember__me">
+                   <input type="checkbox" name="" value="">
+                   Remember me
+                 </label> 
+                </div>
+                <button type="submit" class="main__btn">
+                    <a href="/">Login</a>
                 </button>
+                <div class="login--register">
+                  <p class="login__text">Don't have an account? 
+                  <a class="login__link" href="../register/index.html" class="register--link">
+                    Register
+                  </a> </p> 
+                </div>
             </div>
           </div>
      </div>
 
-     <!-- Services Section -->
-     <div class="services">
-        <h1>Read more and become an expert </h1>
-        <div class="services__container">
-            <div class="services__card">
-                <h2>Most popular dinos</h2>
-                <p>T-rex, sinosaurus and much more...</p>
-                <button>Read more</button>
-            </div>
-            <div class="services__card">
-                <h2>Most dangerous</h2>
-                <p>Carnivores, gigantic creatures...</p>
-                <button>Read more</button>
-            </div>
-        </div>
-     </div>
 
      <!-- Footer Section -->
       <div class="footer__container">
@@ -137,6 +142,6 @@
             </div>
       </div>
 
-    <script src="./assets/js/main.js"></script>
+    <script src="../assets/js/main.js"></script>
 </body>
 </html>
