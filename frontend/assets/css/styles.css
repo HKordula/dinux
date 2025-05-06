@@ -309,8 +309,7 @@
 
 /* Mobile Responsive */
 @media  screen and (max-width: 768px) {
-    .main__container,
-    .main__login--container {
+    .main__container {
         display: grid;
         grid-template-columns: auto;
         align-items: center;
@@ -320,32 +319,32 @@
         height: 90vh;
     }
 
-    .main__content, .main__login--content h1 {
+    .main__content  h1 {
         font-size: 2.5rem;
         margin-top: 2rem;
     }
 
-    .main__content, .main__login--content h2 {
+    .main__content h2 {
         font-size: 3rem;
     }
 
-    .main__content, .main__login--content p {
+    .main__content p {
         margin-top: 1rem;
         font-size: 1.5rem;
     }
 }
 
 @media screen and (max-width:  480px) {
-    .main__content, .main__login--content h1 {
+    .main__content h1 {
         font-size: 2rem;
         margin-top: 3rem;
     }
 
-    .main__content, .main__login--content h2 {
+    .main__content h2 {
         font-size: 2rem;
     }
 
-    .main__content, .main__login--content p {
+    .main__content p {
         margin-top: 2rem;
         font-size: 1.5rem;
     }
@@ -805,6 +804,62 @@
     box-shadow: 0 0 30px rgba(0,0,0,.8);
 }
 
+@media  screen and (max-width: 768px) {
+    .main__login--container,
+    .main__register--container {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-self: center;
+    margin: 0 auto;
+    height: 80vh;
+    background-color: transparent;
+    z-index: 2;
+    width: 70%;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    border: 2px solid rgba(255, 255, 255, .5);
+    border-radius: 20px;
+    backdrop-filter: blur(7px);
+    box-shadow: 0 0 30px rgba(0,0,0,.8);
+    }
+
+    .main__content, .main__login--content h1 {
+        font-size: 2.5rem;
+        margin-top: 2rem;
+    }
+
+    .main__content, .main__login--content h2 {
+        font-size: 3rem;
+    }
+
+    .main__content, .main__login--content p {
+        margin-top: 1rem;
+        font-size: 1.5rem;
+    }
+}
+
+@media screen and (max-width:  480px) {
+    .main__content, .main__login--content h1 {
+        font-size: 2rem;
+        margin-top: 3rem;
+    }
+
+    .main__content, .main__login--content h2 {
+        font-size: 2rem;
+    }
+
+    .main__content, .main__login--content p {
+        margin-top: 2rem;
+        font-size: 1.5rem;
+    }
+
+    .main___btn {
+        padding: 12px 36px;
+        margin: 2.5rem 0;
+    }
+}
 
 /* palette for styling */
 .palette {
