@@ -1,6 +1,6 @@
-const pool = require('../config/db');
-const asyncHandler = require('../utils/asyncHandler');
-const constants = require('../config/constants');
+import pool from '../config/db.js';
+import asyncHandler from '../utils/asyncHandler.js';
+import constants from '../config/constants.js';
 
 class Dinosaur {
   static async create({ name, species_id, description, era_id, diet_id, size, weight, image_url, categories = [], environments = [] }) {
@@ -18,17 +18,15 @@ class Dinosaur {
 
       if (categories.length > 0) {
         await connection.query(
-          `INSERT INTO dinosaur_categories (dinosaur_id, group_id)
-          VALUES ?`,
-          [categories.map(cat => [dinosaurId, cat])]
+          `INSERT INTO dinosaur_categories (dinosaur_id, group_id) VALUES ${categories.map(() => '(?, ?)').join(', ')}`,
+          categories.flatMap(cat => [dinosaurId, cat])
         );
       }
 
       if (environments.length > 0) {
         await connection.query(
-          `INSERT INTO dinosaur_environments (dinosaur_id, environment_id)
-          VALUES ?`,
-          [environments.map(env => [dinosaurId, env])]
+          `INSERT INTO dinosaur_environments (dinosaur_id, environment_id) VALUES ${environments.map(() => '(?, ?)').join(', ')}`,
+          environments.flatMap(env => [dinosaurId, env])
         );
       }
 
@@ -91,12 +89,19 @@ class Dinosaur {
       `SELECT d.*, 
         s.name AS species, 
         e.name AS era, 
-        di.name AS diet
+        di.name AS diet,
+        GROUP_CONCAT(DISTINCT c.name) AS categories,
+        GROUP_CONCAT(DISTINCT env.name) AS environments
       FROM dinosaurs d
       LEFT JOIN species s ON d.species_id = s.id
       LEFT JOIN eras e ON d.era_id = e.id
       LEFT JOIN diets di ON d.diet_id = di.id
-      WHERE d.id = ?`,
+      LEFT JOIN dinosaur_categories dc ON d.id = dc.dinosaur_id
+      LEFT JOIN categories c ON dc.group_id = c.id
+      LEFT JOIN dinosaur_environments de ON d.id = de.dinosaur_id
+      LEFT JOIN environments env ON de.environment_id = env.id
+      WHERE d.id = ?
+      GROUP BY d.id`,
       [id]
     );
     return dinosaurs[0];
@@ -111,6 +116,8 @@ class Dinosaur {
         validFields[key] = updates[key];
       }
     });
+
+    if (Object.keys(validFields).length === 0) return 0;
 
     const setClause = Object.keys(validFields)
       .map(key => `${key} = ?`)
@@ -136,6 +143,17 @@ class Dinosaur {
     );
     return result.affectedRows;
   }
+
+  static async getTierList() {
+    const [rows] = await pool.query(`
+      SELECT d.id, d.name, COUNT(v.id) AS votes
+      FROM dinosaurs d
+      LEFT JOIN votes v ON d.id = v.dinosaur_id
+      GROUP BY d.id
+      ORDER BY votes DESC, d.name ASC
+    `);
+    return [rows];
+  }
 }
 
-module.exports = Dinosaur;
+export default Dinosaur;

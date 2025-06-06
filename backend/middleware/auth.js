@@ -1,10 +1,10 @@
-const jwt = require('jsonwebtoken');
-const pool = require('../config/db');
-const constants = require('../config/constants');
+import jwt from 'jsonwebtoken';
+import pool from '../config/db.js';
+import constants from '../config/constants.js';
 
 const authenticate = async (req, res, next) => {
   try {
-    // 1. Get token from header
+    // get token from header
     let token;
     if (
       req.headers.authorization &&
@@ -17,14 +17,14 @@ const authenticate = async (req, res, next) => {
       throw new Error(constants.ERROR_MESSAGES.UNAUTHORIZED);
     }
 
-    // 2. Verify token
+    // verify token
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    
-    // 3. Get user from database
+
+    // get user from database
     const [users] = await pool.query(
       `SELECT id, username, email, role, created_at 
        FROM users 
-       WHERE id = ? AND deleted_at IS NULL`,
+       WHERE id = ?`,
       [decoded.userId]
     );
 
@@ -32,7 +32,7 @@ const authenticate = async (req, res, next) => {
       throw new Error('User belonging to this token no longer exists');
     }
 
-    // 4. Attach user to request
+    // attach user to request
     req.user = users[0];
     next();
   } catch (error) {
@@ -60,7 +60,4 @@ const authorize = (...roles) => {
   };
 };
 
-module.exports = {
-  authenticate,
-  authorize
-};
+export { authenticate, authorize };

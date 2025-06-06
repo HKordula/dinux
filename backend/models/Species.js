@@ -1,4 +1,4 @@
-const pool = require('../config/db');
+import pool from '../config/db.js';
 
 class Species {
   static async getAll() {
@@ -29,11 +29,17 @@ class Species {
       throw new Error('No valid updates provided');
     }
 
+    const setClause = Object.keys(validUpdates)
+      .map(key => `${key} = ?`)
+      .join(', ');
+    const values = Object.values(validUpdates);
+    values.push(id);
+
     const [result] = await pool.query(
       `UPDATE species 
-       SET ?
+       SET ${setClause}
        WHERE id = ?`,
-      [validUpdates, id]
+      values
     );
 
     return result.affectedRows;
@@ -48,4 +54,4 @@ class Species {
   }
 }
 
-module.exports = Species;
+export default Species;

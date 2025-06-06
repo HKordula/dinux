@@ -1,14 +1,34 @@
-const pool = require('../config/db');
-const bcrypt = require('bcrypt');
-const constants = require('../config/constants');
+import pool from '../config/db.js';
+import bcrypt from 'bcrypt';
+import constants from '../config/constants.js';
 
 class User {
   static async findByUsername(username) {
     const [rows] = await pool.query(
-      `SELECT id, username, email, password, role, created_at
+      `SELECT id, username, email, password, role
        FROM users 
-       WHERE username = ? AND deleted_at IS NULL`,
+       WHERE username = ?`,
       [username]
+    );
+    return rows[0];
+  }
+
+  static async findByEmail(email) {
+    const [rows] = await pool.query(
+      `SELECT id, username, email, password, role
+       FROM users 
+       WHERE email = ?`,
+      [email]
+    );
+    return rows[0];
+  }
+
+  static async findById(id) {
+    const [rows] = await pool.query(
+      `SELECT id, username, email, role
+       FROM users 
+       WHERE id = ?`,
+      [id]
     );
     return rows[0];
   }
@@ -27,9 +47,9 @@ class User {
   static async update(id, updates) {
     const validFields = {};
     const allowedFields = ['username', 'email', 'password'];
-    
+
     Object.keys(updates).forEach(key => {
-      if (allowedFields.includes(key)) {
+      if (allowedFields.includes(key) && updates[key] !== undefined && updates[key] !== null) {
         validFields[key] = updates[key];
       }
     });
@@ -37,6 +57,8 @@ class User {
     if (validFields.password) {
       validFields.password = await bcrypt.hash(validFields.password, 10);
     }
+
+    if (Object.keys(validFields).length === 0) return 0;
 
     const setClause = Object.keys(validFields)
       .map(key => `${key} = ?`)
@@ -47,8 +69,8 @@ class User {
 
     const [result] = await pool.query(
       `UPDATE users 
-       SET ${setClause}
-       WHERE id = ? AND deleted_at IS NULL`,
+      SET ${setClause}
+      WHERE id = ?`,
       values
     );
 
@@ -57,13 +79,23 @@ class User {
 
   static async delete(id) {
     const [result] = await pool.query(
-      `UPDATE users 
-       SET deleted_at = CURRENT_TIMESTAMP()
-       WHERE id = ?`,
+      `DELETE FROM users WHERE id = ?`,
       [id]
     );
     return result.affectedRows;
   }
+
+  static async updateRole(userId, role) {
+    const [result] = await pool.query('UPDATE users SET role=? WHERE id=?', [role, userId]);
+    return result.affectedRows;
+  }
+
+  static async getAll() {
+    const [rows] = await pool.query(
+      'SELECT id, username, email, role FROM users ORDER BY id DESC'
+    );
+    return rows;
+  }
 }
 
-module.exports = User;
+export default User;

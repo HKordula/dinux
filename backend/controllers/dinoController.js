@@ -1,6 +1,5 @@
-const Dinosaur = require('../models/Dinosaur');
-const asyncHandler = require('../utils/asyncHandler');
-const { idParamCheck } = require('../middleware/validate');
+import Dinosaur from '../models/Dinosaur.js';
+import asyncHandler from '../utils/asyncHandler.js';
 
 const getAllDinosaurs = asyncHandler(async (req, res) => {
   const filters = {
@@ -8,9 +7,7 @@ const getAllDinosaurs = asyncHandler(async (req, res) => {
     diet: req.query.diet,
     era: req.query.era
   };
-
   const dinosaurs = await Dinosaur.findAll(filters);
-  
   res.json({
     success: true,
     count: dinosaurs.length,
@@ -20,14 +17,12 @@ const getAllDinosaurs = asyncHandler(async (req, res) => {
 
 const getDinosaurById = asyncHandler(async (req, res) => {
   const dinosaur = await Dinosaur.findById(req.params.id);
-  
   if (!dinosaur) {
     return res.status(404).json({
       success: false,
       error: 'Dinosaur not found'
     });
   }
-
   res.json({
     success: true,
     data: dinosaur
@@ -40,7 +35,6 @@ const createDinosaur = asyncHandler(async (req, res) => {
     categories: req.body.categories || [],
     environments: req.body.environments || []
   });
-
   res.status(201).json({
     success: true,
     data: { id: dinosaurId }
@@ -49,14 +43,12 @@ const createDinosaur = asyncHandler(async (req, res) => {
 
 const updateDinosaur = asyncHandler(async (req, res) => {
   const affectedRows = await Dinosaur.update(req.params.id, req.body);
-  
   if (affectedRows === 0) {
     return res.status(404).json({
       success: false,
       error: 'Dinosaur not found'
     });
   }
-
   res.json({
     success: true,
     message: 'Dinosaur updated successfully'
@@ -65,24 +57,28 @@ const updateDinosaur = asyncHandler(async (req, res) => {
 
 const deleteDinosaur = asyncHandler(async (req, res) => {
   const affectedRows = await Dinosaur.delete(req.params.id);
-  
   if (affectedRows === 0) {
     return res.status(404).json({
       success: false,
       error: 'Dinosaur not found'
     });
   }
-
   res.json({
     success: true,
     message: 'Dinosaur deleted successfully'
   });
 });
 
-module.exports = {
+const getTierList = asyncHandler(async (req, res) => {
+  const [tierList] = await Dinosaur.getTierList();
+  res.json({ success: true, data: tierList });
+});
+
+export {
   getAllDinosaurs,
   getDinosaurById,
   createDinosaur,
   updateDinosaur,
-  deleteDinosaur
+  deleteDinosaur,
+  getTierList
 };

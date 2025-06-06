@@ -1,16 +1,15 @@
-const User = require('../models/User');
-const Dinosaur = require('../models/Dinosaur');
-const asyncHandler = require('../utils/asyncHandler');
-const { idParamCheck } = require('../middleware/validate');
+import User from '../models/User.js';
+import Dinosaur from '../models/Dinosaur.js';
+import asyncHandler from '../utils/asyncHandler.js';
+import bcrypt from 'bcrypt';
 
 const manageUsers = asyncHandler(async (req, res) => {
-  const [users] = await pool.query(
-    `SELECT id, username, email, role, created_at 
-     FROM users 
-     WHERE deleted_at IS NULL
-     ORDER BY created_at DESC`
-  );
-  
+  let users = [];
+  if (User.getAll) {
+    users = await User.getAll();
+  } else {
+    users = await User.findAll ? await User.findAll() : [];
+  }
   res.json({
     success: true,
     count: users.length,
@@ -18,67 +17,57 @@ const manageUsers = asyncHandler(async (req, res) => {
   });
 });
 
-const updateUserStatus = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const { role } = req.body;
-
-  if (!['user', 'admin'].includes(role)) {
-    return res.status(400).json({
-      success: false,
-      error: 'Invalid role specified'
-    });
+const updateUserStatus = async (req, res, next) => {
+  try {
+    const userId = req.params.id;
+    const { role } = req.body;
+    const affectedRows = await User.updateRole(userId, role);
+    if (affectedRows === 0) {
+      return res.status(404).json({ success: false, error: 'User not found' });
+    }
+    res.json({ success: true, message: 'User role updated' });
+  } catch (err) {
+    next(err);
   }
+};
 
-  const [result] = await pool.query(
-    `UPDATE users 
-     SET role = ? 
-     WHERE id = ? AND deleted_at IS NULL`,
-    [role, id]
-  );
-
-  if (result.affectedRows === 0) {
-    return res.status(404).json({
-      success: false,
-      error: 'User not found'
-    });
+// helper for temp password
+function generateTempPassword(length = 10) {
+  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let pass = '';
+  for (let i = 0; i < length; i++) {
+    pass += chars.charAt(Math.floor(Math.random() * chars.length));
   }
-
-  res.json({
-    success: true,
-    message: 'User role updated successfully'
-  });
-});
+  return pass;
+}
 
 const resetUserPassword = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const tempPassword = generateTempPassword();
-  
   const hashedPassword = await bcrypt.hash(tempPassword, 10);
-  const [result] = await pool.query(
-    `UPDATE users 
-     SET password = ? 
-     WHERE id = ?`,
-    [hashedPassword, id]
-  );
 
-  if (result.affectedRows === 0) {
-    return res.status(404).json({
-      success: false,
-      error: 'User not found'
-    });
+  const affectedRows = await User.update(id, { password: hashedPassword });
+  if (affectedRows === 0) {
+    return res.status(404).json({ success: false, error: 'User not found' });
   }
 
   res.json({
     success: true,
-    message: 'Password reset initiated'
+    message: 'Password reset initiated',
+    tempPassword // temp password for admin to give to user
   });
 });
 
 const manageDinosaur = asyncHandler(async (req, res) => {
-    // TODO
+  const dinosaurs = await Dinosaur.findAll();
+  res.json({
+    success: true,
+    count: dinosaurs.length,
+    data: dinosaurs
+  });
 });
 
-module.exports = {
+export {
   manageUsers,
   updateUserStatus,
   resetUserPassword,

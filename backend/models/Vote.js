@@ -1,5 +1,5 @@
-const pool = require('../config/db');
-const constants = require('../config/constants');
+import pool from '../config/db.js';
+import constants from '../config/constants.js';
 
 class Vote {
   static async castVote(userId, dinosaurId, sessionId) {
@@ -62,6 +62,33 @@ class Vote {
     );
     return votes;
   }
+
+  static async createSession(title, description) {
+    return pool.query('INSERT INTO vote_sessions (title, description) VALUES (?, ?)', [title, description]);
+  }
+
+  static async updateSession(id, { title, description }) {
+    const [result] = await pool.query('UPDATE vote_sessions SET title=?, description=? WHERE id=?', [title, description, id]);
+    return result.affectedRows;
+  }
+
+  static async deleteSession(id) {
+    const [result] = await pool.query('DELETE FROM vote_sessions WHERE id=?', [id]);
+    return result.affectedRows;
+  }
+  
+  static async getAllSessions() {
+    const [rows] = await pool.query('SELECT * FROM vote_sessions');
+    return rows;
+  }
+
+  static async getSessionsVotedByUser(userId) {
+    const [rows] = await pool.query(
+      `SELECT DISTINCT vote_session_id FROM votes WHERE user_id = ?`,
+      [userId]
+    );
+    return rows;
+  }
 }
 
-module.exports = Vote;
+export default Vote;

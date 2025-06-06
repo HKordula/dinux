@@ -1,4 +1,4 @@
-const constants = require('../config/constants');
+import constants from '../config/constants.js';
 
 const errorHandler = (err, req, res, next) => {
   const statusCode = err.statusCode || 500;
@@ -23,14 +23,10 @@ const errorHandler = (err, req, res, next) => {
   });
 };
 
-// 404
 const notFound = (req, res, next) => {
   const error = new Error(`Not Found - ${req.originalUrl}`);
   error.statusCode = 404;
   next(error);
 };
 
-module.exports = {
-  errorHandler,
-  notFound
-};
+export { errorHandler, notFound };

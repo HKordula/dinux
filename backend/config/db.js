@@ -1,11 +1,14 @@
-const mysql = require('mysql2/promise');
-require('dotenv').config();
+import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
+dotenv.config();
+
+const dbName = process.env.NODE_ENV === 'test' ? 'dinux_test' : 'dinux';
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'dinux',
+  database: dbName,
   waitForConnections: true,
   connectionLimit: process.env.DB_CONNECTION_LIMIT || 10,
   queueLimit: 0,
@@ -14,7 +17,7 @@ const pool = mysql.createPool({
   namedPlaceholders: true
 });
 
-// Test database connection on startup
+// test database connection on apps startup
 pool.getConnection()
   .then(connection => {
     console.log('Connected to MySQL database');
@@ -25,4 +28,4 @@ pool.getConnection()
     process.exit(1);
   });
 
-module.exports = pool;
+export default pool;
