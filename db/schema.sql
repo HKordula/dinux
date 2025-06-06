@@ -38,17 +38,17 @@ CREATE TABLE IF NOT EXISTS dinosaurs (
     weight VARCHAR(50),
     image_url VARCHAR(255),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (species_id) REFERENCES species(id),
-    FOREIGN KEY (era_id) REFERENCES eras(id),
-    FOREIGN KEY (diet_id) REFERENCES diets(id)
+    FOREIGN KEY (species_id) REFERENCES species(id) ON DELETE CASCADE,
+    FOREIGN KEY (era_id) REFERENCES eras(id) ON DELETE CASCADE,
+    FOREIGN KEY (diet_id) REFERENCES diets(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS dinosaur_categories (
     dinosaur_id INT,
     group_id INT,
     PRIMARY KEY (dinosaur_id, group_id),
-    FOREIGN KEY (dinosaur_id) REFERENCES dinosaurs(id),
-    FOREIGN KEY (group_id) REFERENCES categories(id)
+    FOREIGN KEY (dinosaur_id) REFERENCES dinosaurs(id) ON DELETE CASCADE,
+    FOREIGN KEY (group_id) REFERENCES categories(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS users (
@@ -56,15 +56,16 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(100) NOT NULL UNIQUE,
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
-    role ENUM('user', 'admin') DEFAULT 'user'
+    role ENUM('user', 'admin') DEFAULT 'user',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS favorites (
     user_id INT,
     dinosaur_id INT,
     PRIMARY KEY (user_id, dinosaur_id),
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (dinosaur_id) REFERENCES dinosaurs(id)
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (dinosaur_id) REFERENCES dinosaurs(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS environments (
@@ -77,8 +78,8 @@ CREATE TABLE IF NOT EXISTS dinosaur_environments (
     dinosaur_id INT,
     environment_id INT,
     PRIMARY KEY (dinosaur_id, environment_id),
-    FOREIGN KEY (dinosaur_id) REFERENCES dinosaurs(id),
-    FOREIGN KEY (environment_id) REFERENCES environments(id)
+    FOREIGN KEY (dinosaur_id) REFERENCES dinosaurs(id) ON DELETE CASCADE,
+    FOREIGN KEY (environment_id) REFERENCES environments(id) ON DELETE CASCADE
 );
 
 
@@ -95,8 +96,8 @@ CREATE TABLE IF NOT EXISTS votes (
     dinosaur_id INT,
     vote_session_id INT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (dinosaur_id) REFERENCES dinosaurs(id),
-    FOREIGN KEY (vote_session_id) REFERENCES vote_sessions(id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (dinosaur_id) REFERENCES dinosaurs(id) ON DELETE CASCADE,
+    FOREIGN KEY (vote_session_id) REFERENCES vote_sessions(id) ON DELETE CASCADE,
     UNIQUE (user_id, dinosaur_id, vote_session_id)
 );

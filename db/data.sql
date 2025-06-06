@@ -42,9 +42,9 @@ INSERT INTO dinosaur_environments (dinosaur_id, environment_id) VALUES
 (3, 2);
 
 INSERT INTO users (username, email, password, role) VALUES
-('admin', 'admin@dinux.com', 'admin', 'admin'),
-('user', 'user@dinux.com', 'user', 'user'),
-('hubert', 'hubert@dinux.com', 'hubert', 'user');
+('admin', 'admin@dinux.com', '$2b$10$.6SS8p44qKWdRXGyDEoKDuZyXWNKRfpRuLJEisS0aFFk6LKnKWDUK', 'admin'),
+('user', 'user@dinux.com', '$2b$10$uMMf.R72y6sTQkDn5mJ1UuXuYszrfOed64dgVBajvjfmI0AuoOCS2', 'user'),
+('hubert', 'hubert@dinux.com', '$2b$10$uMMf.R72y6sTQkDn5mJ1UuXuYszrfOed64dgVBajvjfmI0AuoOCS2', 'user');
 
 INSERT INTO favorites (user_id, dinosaur_id) VALUES
 (2, 1),
