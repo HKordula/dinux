@@ -1,6 +1,4 @@
 import pool from '../config/db.js';
-import asyncHandler from '../utils/asyncHandler.js';
-import constants from '../config/constants.js';
 
 class Dinosaur {
   static async create({ name, species_id, description, era_id, diet_id, size, weight, image_url, categories = [], environments = [] }) {

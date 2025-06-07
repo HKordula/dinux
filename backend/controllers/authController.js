@@ -16,6 +16,11 @@ const register = asyncHandler(async (req, res, next) => {
     return res.status(400).json({ success: false, error: 'Email already exists' });
   }
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ success: false, error: 'Invalid email format' });
+  }
+
   const userId = await User.create({ username, email, password });
   const token = jwt.sign(
     { userId },

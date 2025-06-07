@@ -17,6 +17,18 @@ const manageUsers = asyncHandler(async (req, res) => {
   });
 });
 
+const deleteUser = async (req, res, next) => {
+  try {
+    const affectedRows = await User.delete(req.params.id);
+    if (affectedRows === 0) {
+      return res.status(404).json({ success: false, error: 'User not found' });
+    }
+    res.json({ success: true, message: 'User deleted' });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const updateUserStatus = async (req, res, next) => {
   try {
     const userId = req.params.id;
@@ -69,6 +81,7 @@ const manageDinosaur = asyncHandler(async (req, res) => {
 
 export {
   manageUsers,
+  deleteUser,
   updateUserStatus,
   resetUserPassword,
   manageDinosaur

@@ -52,6 +52,11 @@ class Species {
     );
     return result.affectedRows;
   }
+
+  static async findById(id) {
+    const [rows] = await pool.query('SELECT * FROM species WHERE id = ?', [id]);
+    return rows[0];
+  }
 }
 
 export default Species;

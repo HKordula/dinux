@@ -3,7 +3,8 @@ import { authenticate, authorize } from '../middleware/auth.js';
 import {
   manageUsers,
   updateUserStatus,
-  resetUserPassword
+  resetUserPassword,
+  deleteUser
 } from '../controllers/adminController.js';
 import {
   createDinosaur,
@@ -16,6 +17,11 @@ import {
   deleteVoteSession,
   getAllVoteSessions
 } from '../controllers/voteController.js';
+import {
+  createSpecies,
+  updateSpecies,
+  deleteSpecies
+} from '../controllers/speciesController.js';
 
 const router = express.Router();
 
@@ -26,19 +32,14 @@ router.delete('/dinos/:id', authenticate, authorize('admin'), deleteDinosaur);
 
 // User management
 router.get('/users', authenticate, authorize('admin'), manageUsers);
-router.delete('/users/:id', authenticate, authorize('admin'), async (req, res, next) => {
-  try {
-    const affectedRows = await User.delete(req.params.id);
-    if (affectedRows === 0) {
-      return res.status(404).json({ success: false, error: 'User not found' });
-    }
-    res.json({ success: true, message: 'User deleted' });
-  } catch (err) {
-    next(err);
-  }
-});
+router.delete('/users/:id', authenticate, authorize('admin'), deleteUser);
 router.put('/users/:id/status', authenticate, authorize('admin'), updateUserStatus);
 router.put('/users/:id/reset-password', authenticate, authorize('admin'), resetUserPassword);
+
+// Species
+router.post('/species', authenticate, authorize('admin'), createSpecies);
+router.put('/species/:id', authenticate, authorize('admin'), updateSpecies);
+router.delete('/species/:id', authenticate, authorize('admin'), deleteSpecies);
 
 // Vote session
 router.post('/vote', authenticate, authorize('admin'), createVoteSession);
