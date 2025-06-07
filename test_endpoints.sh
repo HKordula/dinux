@@ -142,7 +142,7 @@ test_negative "POST" "/register" "Register user with duplicate username" "" '{"u
 
 test_positive "GET" "/dinos" "GET /dinos"
 test_positive "GET" "/dinos/1" "GET /dinos/1"
-test_positive "GET" "/spiecieses" "GET /spiecieses"
+test_positive "GET" "/species" "GET /species"
 test_positive "GET" "/tierlist" "GET /tierlist"
 
 test_positive "POST" "/favorites" "POST /favorites" "$USER_TOKEN" '{"dinoId":1}'
@@ -181,7 +181,46 @@ test_positive "GET" "/admin/vote" "GET /admin/vote" "$ADMIN_TOKEN"
 
 test_positive "DELETE" "/users/delete" "DELETE /users/delete" "$USER_TOKEN"
 
-# --- NEGATIVE TESTS ---
+# --- AUTH EXTRAS ---
+test_negative "POST" "/login" "Login with wrong password" "" '{"username":"apitestuser","password":"wrongpass"}'
+test_negative "POST" "/register" "Register with invalid email" "" '{"username":"bademail","email":"notanemail","password":"pass"}'
+
+# --- FAVORITES EXTRAS ---
+test_negative "GET" "/favorites" "GET /favorites without token"
+test_negative "POST" "/favorites" "POST /favorites without token" "" '{"dinoId":1}'
+test_negative "DELETE" "/favorites/9999" "DELETE non-existent favorite" "$USER_TOKEN"
+
+# --- PROFILE UPDATE EXTRAS ---
+test_negative "PUT" "/users/update" "Update profile with duplicate email" "$USER_TOKEN" '{"email":"apitestuser@example.com"}'
+
+# --- VOTE EXTRAS ---
+test_negative "GET" "/vote/9999" "GET /vote/:dinoId for non-existent dino" "$USER_TOKEN"
+test_negative "POST" "/vote/1" "POST /vote/:dinoId without sessionId" "$USER_TOKEN"
+
+# --- PUBLIC ROUTES EXTRAS ---
+test_negative "GET" "/dinos/9999" "GET /dinos/:id for non-existent dino"
+test_positive "GET" "/species/1" "GET /species/:id (valid)"
+test_negative "GET" "/species/9999" "GET /species/:id (invalid)"
+
+# --- ADMIN USER MANAGEMENT ---
+test_positive "POST" "/register" "Register user for admin delete" "" '{"username":"admintestuser","email":"admintestuser@example.com","password":"admintestpass"}'
+ADMIN_DELETE_USER_LOGIN=$(api_call "POST" "/login" "" '{"username":"admintestuser","password":"admintestpass"}')
+ADMIN_DELETE_USER_ID=$(echo "$ADMIN_DELETE_USER_LOGIN" | jq -r '.data.user.id')
+test_positive "DELETE" "/admin/users/$ADMIN_DELETE_USER_ID" "Admin delete user" "$ADMIN_TOKEN"
+
+test_negative "DELETE" "/admin/users/9999" "Admin delete non-existent user" "$ADMIN_TOKEN"
+
+# --- ADMIN SPECIES MANAGEMENT ---
+test_positive "POST" "/admin/species" "Admin create species" "$ADMIN_TOKEN" '{"name":"TestSpecies"}'
+test_positive "PUT" "/admin/species/1" "Admin update species" "$ADMIN_TOKEN" '{"name":"UpdatedSpecies"}'
+test_positive "DELETE" "/admin/species/1" "Admin delete species" "$ADMIN_TOKEN"
+test_negative "PUT" "/admin/species/9999" "Admin update non-existent species" "$ADMIN_TOKEN" '{"name":"Nope"}'
+test_negative "DELETE" "/admin/species/9999" "Admin delete non-existent species" "$ADMIN_TOKEN"
+
+# --- ADMIN ENDPOINTS WITH NORMAL USER ---
+test_negative "DELETE" "/admin/users/$USER_ID" "Normal user forbidden on admin delete user" "$USER_TOKEN"
+test_negative "POST" "/admin/species" "Normal user forbidden on admin create species" "$USER_TOKEN" '{"name":"ShouldFail"}'
+
 test_negative "POST" "/admin/dinos" "Unlogged user forbidden on POST /admin/dinos" "" '{"name":"ShouldFail","species_id":1,"description":"fail","era_id":1,"diet_id":1,"size":"1m","weight":"1kg","image_url":"fail.jpg","categories":[1],"environments":[1]}'
 test_negative "POST" "/admin/dinos" "Normal user forbidden on POST /admin/dinos" "$USER_TOKEN" '{"name":"ShouldFail","species_id":1,"description":"fail","era_id":1,"diet_id":1,"size":"1m","weight":"1kg","image_url":"fail.jpg","categories":[1],"environments":[1]}'
 test_negative "GET" "/admin/users" "Normal user forbidden on GET /admin/users" "$USER_TOKEN"
