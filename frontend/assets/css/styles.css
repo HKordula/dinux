@@ -876,3 +876,19 @@
 }
 
 
+.admin__container {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    justify-self: center;
+    margin: 0 auto;
+    height: 90vh;
+    background-color: transparent;
+    z-index: 2;
+    width: 100%;
+    max-width: 1300px;
+    padding: 0 20px;
+    padding-top: 50px;
+}

@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DINUX Website</title>
-    <link rel="stylesheet" href="assets/css/styles.css">
+    <title>DINUX Admin</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
 </head>
 <body>
     <!-- Navbar Section -->
     <nav class="navbar">
         <div class="navbar__container">
-            <a href="./index.html" id="navbar__logo">DINUX</a>
+            <a href="../index.html" id="navbar__logo">DINUX</a>
             <div class="navbar__toggle" id="mobile-menu">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -18,12 +18,12 @@
             </div>
             <ul class="navbar__menu">
                 <li class="navbar__item">
-                    <a href="./index.html" class="navbar__links">
+                    <a href="../index.html" class="navbar__links">
                         Home
                     </a>
                 </li>
                 <li class="navbar__item">
-                    <a href="/about/about.html" class="navbar__links">
+                    <a href="/aoubt/about.html" class="navbar__links">
                         About 
                     </a>
                 </li>
@@ -33,7 +33,7 @@
                     </a>
                 </li>
                 <li class="navbar__item">
-                    <a href="./admin/index.html" class="navbar__links">
+                    <a href="/admin/index.html" class="navbar__links">
                         Admin
                     </a>
                 </li>
@@ -49,36 +49,48 @@
     <!-- Hero Section -->
      <div class="main">
         <div class="main__img--container">
-          <img src="assets/images/main-img.jpg" alt="pic" id="main__img">
+          <img src="../assets/images/main-img.jpg" alt="pic" id="main__img">
         </div>
           <div class="main__container">
             <div class="main__content">
-                <h1>THIS IS </h1>
-                <h2>DINUX PARK</h2>
-                <p>See what makes us unique.</p>
+                <h1>ADMIN PANEL</h1>
+                <h2>Welcome, <span id="admin-username">Admin</span></h2> <!-- TODO: Replace with dynamic username --> 
+                <p>Manage users, dinosaurs, and votes below.</p>
                 <button class="main__btn">
-                    <a href="/">Get Started</a>
+                    <a href="/">Dinos</a>
+                </button>
+                <button class="main__btn">
+                    <a href="/">Users</a>
+                </button>
+                <button class="main__btn">
+                    <a href="/">Votes</a>
                 </button>
             </div>
           </div>
      </div>
 
-     <!-- Services Section -->
-     <div class="services">
-        <h1>Read more and become an expert </h1>
-        <div class="services__container">
-            <div class="services__card">
-                <h2>Most popular dinos</h2>
-                <p>T-rex, sinosaurus and much more...</p>
-                <button>Read more</button>
-            </div>
-            <div class="services__card">
-                <h2>Most dangerous</h2>
-                <p>Carnivores, gigantic creatures...</p>
-                <button>Read more</button>
-            </div>
-        </div>
-     </div>
+     <!-- Dinosaur Table Start -->
+    <h2>Dinosaur List</h2>
+    <table border="1" style="width:100%; border-collapse:collapse;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Species</th>
+                <th>Description</th>
+                <th>Era</th>
+                <th>Diet</th>
+                <th>Size</th>
+                <th>Weight</th>
+                <th>Categories</th>
+                <th>Environments</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody id="dino-table-body">
+            
+        </tbody>
+    </table>
 
      <!-- Footer Section -->
       <div class="footer__container">
@@ -145,3 +157,40 @@
     <script src="./assets/js/main.js"></script>
 </body>
 </html>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('http://localhost:3000/api/dinos')
+        .then(response => response.json())
+        .then(data => {
+            const dinos = Array.isArray(data) ? data : data.dinos;
+            const tbody = document.getElementById('dino-table-body');
+            tbody.innerHTML = '';
+            if (Array.isArray(dinos)) {
+                dinos.forEach(dino => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${dino.id}</td>
+                        <td>${dino.name}</td>
+                        <td>${dino.species}</td>
+                        <td>${dino.description}</td>
+                        <td>${dino.era}</td>
+                        <td>${dino.diet}</td>
+                        <td>${dino.size}</td>
+                        <td>${dino.weight}</td>
+                        <td>${Array.isArray(dino.categories) ? dino.categories.join(', ') : dino.categories}</td>
+                        <td>${Array.isArray(dino.environments) ? dino.environments.join(', ') : dino.environments}</td>
+                        <td><img src="${dino.image}" alt="${dino.name}" width="60"></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } else {
+                tbody.innerHTML = `<tr><td colspan="11">No data found</td></tr>`;
+            }
+        })
+        .catch(error => {
+            document.getElementById('dino-table-body').innerHTML = `<tr><td colspan="11">Failed to load data</td></tr>`;
+            console.error('Error fetching dinos:', error);
+        });
+});
+</script>
