@@ -10,7 +10,7 @@
     <!-- Navbar Section -->
     <nav class="navbar">
         <div class="navbar__container">
-            <a href="./index.html" id="navbar__logo">DINUX</a>
+            <a href="../index.html" id="navbar__logo">DINUX</a>
             <div class="navbar__toggle" id="mobile-menu">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -49,31 +49,31 @@
           <div class="main__register--container">
             <div class="main__login--content">
                 <h1>Registration</h1>
-                <div class="login__input--box">
-                  <span>👤</span> 
-                  <input type="text" name="text" value="" required>
-                  <label for="email">Username</label>
-                </div>
-                <div class="login__input--box">
-                  <span>📧</span> 
-                  <input type="email" name="email" value="" required>
-                  <label for="email">Email</label>
-                </div>
-
-                <div class="login__input--box">
-                  <span>🔒</span> 
-                  <input type="password" name="password" value="" required>
-                  <label for="password">Password</label>
-                </div>
-                <div class="remember__me--box">
-                 <label for="remember__me">
-                   <input type="checkbox" name="" value="">
-                   I agree to the terms
-                 </label> 
-                </div>
-                <button type="submit" class="main__login--btn">
-                    <a href="/">Register</a>
-                </button>
+                <form id="registerForm" method="post">
+                    <div class="login__input--box">
+                        <span>👤</span> 
+                        <input type="text" name="username" required>
+                        <label for="username">Username</label>
+                    </div>
+                    <div class="login__input--box">
+                        <span>📧</span> 
+                        <input type="email" name="email" required>
+                        <label for="email">Email</label>
+                    </div>
+                    <div class="login__input--box">
+                        <span>🔒</span> 
+                        <input type="password" name="password" required>
+                        <label for="password">Password</label>
+                    </div>
+                    <div class="remember__me--box">
+                    <label for="remember__me">
+                    <input type="checkbox" name="" value="">
+                    I agree to the terms
+                    </label> 
+                    </div>
+                    <button type="submit" class="main__login--btn">Register</button>
+                    <div class="auth-message"></div>
+                </form>
                 <div class="login--register">
                   <p class="login__text">Already have an account? <a class="login__link" href="../signin/index.html" class="register--link"> Sign in</a> </p> 
                 </div>
@@ -145,5 +145,9 @@
       </div>
 
     <script src="../assets/js/main.js"></script>
+    <script type="module">
+        import { handleForm } from '../assets/js/auth.js'
+        handleForm('registerForm', '/api/register', { successRedirect: '/' });
+    </script>
 </body>
 </html>
