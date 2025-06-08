@@ -51,12 +51,11 @@ INSERT INTO favorites (user_id, dinosaur_id) VALUES
 (2, 2), 
 (3, 3);
 
-INSERT INTO vote_sessions (title, description) VALUES
-('Best Dinosaur', 'Vote for your all-time favorite dino!'),
-('Most Dangerous Carnivore', 'Which meat-eater would you not want to meet?');
-
+INSERT INTO vote_sessions (title, description, choice1_id, choice2_id) VALUES
+('Best Dinosaur', 'Vote for your all-time favorite dino!', 1, 2),
+('Most Dangerous Carnivore', 'Which meat-eater would you not want to meet?', 1, 3);
 
 INSERT INTO votes (user_id, dinosaur_id, vote_session_id) VALUES
 (2, 1, 1),
-(2, 2, 1),
+(2, 1, 2),
 (3, 3, 2);

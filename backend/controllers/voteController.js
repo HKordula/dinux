@@ -15,26 +15,40 @@ const castVote = asyncHandler(async (req, res) => {
 });
 
 const getVoteResults = asyncHandler(async (req, res) => {
-  const { sessionId } = req.query;
-
+  const sessionId = req.params.sessionId || req.query.sessionId || req.params.id;
   if (!sessionId) {
     return res.status(400).json({ success: false, error: 'Missing vote session ID' });
   }
 
+  const session = await Vote.getSessionById(sessionId);
+  if (!session) {
+    return res.status(404).json({ success: false, error: 'Vote session not found' });
+  }
+
   const results = await Vote.getSessionResults(sessionId);
-  res.json({ success: true, data: results });
+
+  res.json({
+    success: true,
+    data: {
+      session,
+      results
+    }
+  });
 });
 
 const createVoteSession = asyncHandler(async (req, res) => {
-  const { title, description } = req.body;
-  const [result] = await Vote.createSession(title, description);
+  const { title, description, choice1_id, choice2_id } = req.body;
+  if (!title || !choice1_id || !choice2_id) {
+    return res.status(400).json({ success: false, error: 'Missing required fields' });
+  }
+  const [result] = await Vote.createSession(title, description, choice1_id, choice2_id);
   res.status(201).json({ success: true, sessionId: result.insertId });
 });
 
 const updateVoteSession = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { title, description } = req.body;
-  const affectedRows = await Vote.updateSession(id, { title, description });
+  const { title, description, choice1_id, choice2_id } = req.body;
+  const affectedRows = await Vote.updateSession(id, { title, description, choice1_id, choice2_id });
   if (affectedRows === 0) {
     return res.status(404).json({ success: false, error: 'Vote session not found' });
   }

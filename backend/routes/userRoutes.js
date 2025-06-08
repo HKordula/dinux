@@ -23,7 +23,7 @@ router.delete('/users/delete', authenticate, deleteAccount);
 
 // Voting
 router.post('/vote/:dinoId', authenticate, castVote);
-router.get('/vote/:dinoId', authenticate, getVoteResults);
+router.get('/vote/:sessionId', authenticate, getVoteResults);
 router.get('/vote/sessions/mine', authenticate, getMyVotedSessions);
 
 export default router;

@@ -87,17 +87,21 @@ CREATE TABLE IF NOT EXISTS vote_sessions (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255),
     description TEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    choice1_id INT NOT NULL,
+    choice2_id INT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (choice1_id) REFERENCES dinosaurs(id) ON DELETE CASCADE,
+    FOREIGN KEY (choice2_id) REFERENCES dinosaurs(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS votes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
-    dinosaur_id INT,
     vote_session_id INT,
+    dinosaur_id INT, -- must be choice1_id or choice2_id
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (dinosaur_id) REFERENCES dinosaurs(id) ON DELETE CASCADE,
     FOREIGN KEY (vote_session_id) REFERENCES vote_sessions(id) ON DELETE CASCADE,
-    UNIQUE (user_id, dinosaur_id, vote_session_id)
+    FOREIGN KEY (dinosaur_id) REFERENCES dinosaurs(id) ON DELETE CASCADE,
+    UNIQUE (user_id, vote_session_id)
 );
