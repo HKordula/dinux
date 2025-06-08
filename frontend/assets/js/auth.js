@@ -1,13 +1,4 @@
-export async function apiRequest(endpoint, method = 'GET', data = null, token = null) {
-  const options = {
-    method,
-    headers: { 'Content-Type': 'application/json' }
-  };
-  if (data) options.body = JSON.stringify(data);
-  if (token) options.headers['Authorization'] = `Bearer ${token}`;
-  const res = await fetch(endpoint, options);
-  return res.json();
-}
+import { apiRequest } from "./utils.js";
 
 function attachFormHandler({ formId, endpoint, method = 'POST', storeToken = false, successRedirect = '/', successMsg = 'Success! Redirecting...', failMsg = 'Request failed.' }) {
   const form = document.getElementById(formId);

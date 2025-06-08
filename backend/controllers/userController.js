@@ -71,8 +71,6 @@ const deleteAccount = asyncHandler(async (req, res) => {
   });
 });
 
-
-
 const getMyVotedSessions = asyncHandler(async (req, res) => {
   const userId = req.user.id;
   const sessions = await Vote.getSessionsVotedByUser(userId);

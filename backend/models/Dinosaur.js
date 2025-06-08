@@ -44,8 +44,8 @@ class Dinosaur {
         s.name AS species, 
         e.name AS era, 
         di.name AS diet,
-        GROUP_CONCAT(DISTINCT c.name) AS categories,
-        GROUP_CONCAT(DISTINCT env.name) AS environments
+        GROUP_CONCAT(DISTINCT c.id) AS category_ids,
+        GROUP_CONCAT(DISTINCT env.id) AS environment_ids
       FROM dinosaurs d
       LEFT JOIN species s ON d.species_id = s.id
       LEFT JOIN eras e ON d.era_id = e.id
@@ -79,7 +79,11 @@ class Dinosaur {
     query += ' GROUP BY d.id';
 
     const [dinosaurs] = await pool.query(query, params);
-    return dinosaurs;
+    return dinosaurs.map(dino => ({
+      ...dino,
+      categories: dino.category_ids ? dino.category_ids.split(',').map(Number) : [],
+      environments: dino.environment_ids ? dino.environment_ids.split(',').map(Number) : []
+    }));
   }
 
   static async findById(id) {
@@ -88,8 +92,8 @@ class Dinosaur {
         s.name AS species, 
         e.name AS era, 
         di.name AS diet,
-        GROUP_CONCAT(DISTINCT c.name) AS categories,
-        GROUP_CONCAT(DISTINCT env.name) AS environments
+        GROUP_CONCAT(DISTINCT c.id) AS category_ids,
+        GROUP_CONCAT(DISTINCT env.id) AS environment_ids
       FROM dinosaurs d
       LEFT JOIN species s ON d.species_id = s.id
       LEFT JOIN eras e ON d.era_id = e.id
@@ -102,7 +106,12 @@ class Dinosaur {
       GROUP BY d.id`,
       [id]
     );
-    return dinosaurs[0];
+    const dino = dinosaurs[0];
+    return {
+      ...dino,
+      categories: dino.category_ids ? dino.category_ids.split(',').map(Number) : [],
+      environments: dino.environment_ids ? dino.environment_ids.split(',').map(Number) : []
+    };
   }
 
 static async update(id, updates) {

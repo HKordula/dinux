@@ -92,7 +92,7 @@ class User {
 
   static async getAll() {
     const [rows] = await pool.query(
-      'SELECT id, username, email, role FROM users ORDER BY id'
+      'SELECT id, username, email, role, created_at FROM users ORDER BY id'
     );
     return rows;
   }

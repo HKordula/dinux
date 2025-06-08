@@ -26,9 +26,9 @@ INSERT INTO environments (name, description) VALUES
 ('Mountain', 'Rocky, elevated terrain.');
 
 INSERT INTO dinosaurs (name, species_id, description, era_id, diet_id, size, weight, image_url) VALUES
-('Tyrannosaurus', 1, 'Fearsome apex predator of the late Cretaceous.', 3, 1, '12m', '8000kg', 'trex.jpg'),
-('Triceratops', 2, 'Iconic horned herbivore from the Cretaceous.', 3, 2, '9m', '6000kg', 'triceratops.jpg'),
-('Velociraptor', 3, 'Fast, intelligent pack hunter.', 3, 1, '2m', '15kg', 'velociraptor.jpg');
+('Tyrannosaurus', 1, 'Fearsome apex predator of the late Cretaceous.', 3, 1, '12m', '8000kg', 'https://images.squarespace-cdn.com/content/v1/598d04984c0dbf67c441eb69/1542608295760-89WUAVEDKQGSMS7WEW9A/rjpalmer_newrex_001.jpg'),
+('Triceratops', 2, 'Iconic horned herbivore from the Cretaceous.', 3, 2, '9m', '6000kg', 'https://wallpapercat.com/w/full/6/c/4/1024763-1920x2974-iphone-hd-triceratops-wallpaper.jpg'),
+('Velociraptor', 3, 'Fast, intelligent pack hunter.', 3, 1, '2m', '15kg', 'https://static1.colliderimages.com/wordpress/wp-content/uploads/2021/06/jurassic-world-social.jpg');
 
 INSERT INTO dinosaur_categories (dinosaur_id, group_id) VALUES
 (1, 1),
