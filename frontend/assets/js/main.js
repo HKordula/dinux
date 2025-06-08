@@ -7,9 +7,16 @@ function includeHTML(id, url, callback) {
     });
 }
 
+function getAssetBase() {
+    // count how many directories deep
+    const depth = window.location.pathname.replace(/\/$/, '').split('/').length - 2;
+    return depth > 0 ? '../'.repeat(depth) + 'assets/' : 'assets/';
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    includeHTML('navbar-include', '/assets/html/navbar.html', setupNavbar);
-    includeHTML('footer-include', '/assets/html/footer.html');
+    const assetBase = getAssetBase();
+    includeHTML('navbar-include', assetBase + 'html/navbar.html', setupNavbar);
+    includeHTML('footer-include', assetBase + 'html/footer.html');
 });
 
 function setupNavbar() {
@@ -21,15 +28,21 @@ function setupNavbar() {
     // always Home
     menu.innerHTML = `
       <li class="navbar__item">
-        <a href="./index.html" class="navbar__links">Home</a>
+        <a href="/" class="navbar__links">Home</a>
       </li>
     `;
 
+    //always About
+    menu.innerHTML += `
+      <li class="navbar__item">
+        <a href="/about/how-it-works.html" class="navbar__links">About</a>
+      </li>
+    `;
     
     if (!token) { // not logged in, show Sign In
       menu.innerHTML += `
         <li class="navbar__btn">
-          <a href="./signin/index.html" class="button">Sign In</a>
+          <a href="/signin/index.html" class="button">Sign In</a>
         </li>
       `;
     } else { // logged in, show My profile or sth #FIXME
@@ -41,7 +54,7 @@ function setupNavbar() {
       if (role === 'admin') { // hes an admin, show admin stuff
         menu.innerHTML += `
           <li class="navbar__item">
-            <a href="./admin/index.html" class="navbar__links">Admin</a>
+            <a href="/admin/index.html" class="navbar__links">Admin</a>
           </li>
         `;
       }
@@ -59,7 +72,7 @@ function setupNavbar() {
         e.preventDefault();
         localStorage.removeItem('token');
         localStorage.removeItem('role');
-        window.location.href = './index.html';
+        window.location.href = '/index.html';
       });
     }
 

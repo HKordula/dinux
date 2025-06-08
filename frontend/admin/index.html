@@ -62,6 +62,10 @@
 </html>
 
 <script>
+const role = localStorage.getItem('role');
+if (role !== 'admin') {
+    window.location.href = '/signin/index.html';
+}
 document.addEventListener('DOMContentLoaded', function() {
     fetch('http://localhost:3000/api/dinos')
         .then(response => response.json())
