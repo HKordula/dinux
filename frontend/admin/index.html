@@ -9,7 +9,7 @@
 <body>
     <div id="navbar-include"></div>
 
-    <!-- Hero Section -->
+<!-- Hero Section -->
      <div class="main">
         <div class="main__img--container">
           <img src="../assets/images/main-img.jpg" alt="pic" id="main__img">
@@ -19,85 +19,66 @@
                 <h1>ADMIN PANEL</h1>
                 <h2>Welcome, <span id="admin-username">Admin</span></h2> <!-- TODO: Replace with dynamic username --> 
                 <p>Manage users, dinosaurs, and votes below.</p>
-                <button class="main__btn">
-                    <a href="/">Dinos</a>
+                <button id="loadDinoTable" class="main__btn">
+                    <a href="#">Dinos</a>
                 </button>
-                <button class="main__btn">
-                    <a href="/">Users</a>
+                <button id="loadUsersTable" class="main__btn">
+                    <a href="#">Users</a>
                 </button>
-                <button class="main__btn">
-                    <a href="/">Votes</a>
+                <button class="main__btn" id="loadVotesTable">
+                    <a href="#">Votes</a>
                 </button>
             </div>
           </div>
      </div>
+     
+    <!-- Dino Table Section -->
+    <div id="dinoTableContainer" class="dino-table-container">
 
-     <!-- Dinosaur Table Start -->
-    <h2>Dinosaur List</h2>
-    <table border="1" style="width:100%; border-collapse:collapse;">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Species</th>
-                <th>Description</th>
-                <th>Era</th>
-                <th>Diet</th>
-                <th>Size</th>
-                <th>Weight</th>
-                <th>Categories</th>
-                <th>Environments</th>
-                <th>Image</th>
-            </tr>
-        </thead>
-        <tbody id="dino-table-body">
-            
-        </tbody>
-    </table>
+    </div>
+
+    <div id="dinoFormContainer" style="display: none; margin: 20px 0;">
+        <h3 id="formTitle">Dodaj dinozaura</h3>
+        <form id="dinoForm">
+            <input type="hidden" id="dinoId">
+
+            <label>Name: <input type="text" id="dinoName" required></label><br>
+            <label>Description: <textarea id="dinoDescription" required></textarea></label><br>
+
+            <label>Species:
+                <select id="dinoSpeciesId" required></select>
+            </label><br>
+
+            <label>Era:
+                <select id="dinoEraId" required></select>
+            </label><br>
+
+            <label>Diet:
+                <select id="dinoDietId" required></select>
+            </label><br>
+
+            <label>Size: <input type="text" id="dinoSize"></label><br>
+            <label>Weight: <input type="text" id="dinoWeight"></label><br>
+
+            <label>Environments:
+                <select id="dinoEnvironments" multiple required></select>
+            </label><br>
+
+            <label>Categories:
+                <select id="dinoCategories" multiple required></select>
+            </label><br>
+
+            <label>Image URL: <input type="text" id="dinoImageUrl"></label><br>
+
+            <button type="submit">Zapisz</button>
+            <button type="button" onclick="hideDinoForm()">Anuluj</button>
+        </form>
+
+    </div>
 
     <div id="footer-include"></div>
 
-    <script src="/assets/js/main.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/adminscript.js"></script>
 </body>
 </html>
-
-<script>
-const role = localStorage.getItem('role');
-if (role !== 'admin') {
-    window.location.href = '/signin/index.html';
-}
-document.addEventListener('DOMContentLoaded', function() {
-    fetch('http://localhost:3000/api/dinos')
-        .then(response => response.json())
-        .then(data => {
-            const dinos = Array.isArray(data) ? data : data.dinos;
-            const tbody = document.getElementById('dino-table-body');
-            tbody.innerHTML = '';
-            if (Array.isArray(dinos)) {
-                dinos.forEach(dino => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${dino.id}</td>
-                        <td>${dino.name}</td>
-                        <td>${dino.species}</td>
-                        <td>${dino.description}</td>
-                        <td>${dino.era}</td>
-                        <td>${dino.diet}</td>
-                        <td>${dino.size}</td>
-                        <td>${dino.weight}</td>
-                        <td>${Array.isArray(dino.categories) ? dino.categories.join(', ') : dino.categories}</td>
-                        <td>${Array.isArray(dino.environments) ? dino.environments.join(', ') : dino.environments}</td>
-                        <td><img src="${dino.image}" alt="${dino.name}" width="60"></td>
-                    `;
-                    tbody.appendChild(row);
-                });
-            } else {
-                tbody.innerHTML = `<tr><td colspan="11">No data found</td></tr>`;
-            }
-        })
-        .catch(error => {
-            document.getElementById('dino-table-body').innerHTML = `<tr><td colspan="11">Failed to load data</td></tr>`;
-            console.error('Error fetching dinos:', error);
-        });
-});
-</script>

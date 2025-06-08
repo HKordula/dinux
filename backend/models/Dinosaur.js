@@ -105,34 +105,67 @@ class Dinosaur {
     return dinosaurs[0];
   }
 
-  static async update(id, updates) {
+static async update(id, updates) {
     const validFields = {};
     const allowedFields = ['name', 'species_id', 'description', 'era_id', 'diet_id', 'size', 'weight', 'image_url'];
-    
+
     Object.keys(updates).forEach(key => {
       if (allowedFields.includes(key)) {
         validFields[key] = updates[key];
       }
     });
 
-    if (Object.keys(validFields).length === 0) return 0;
+    const connection = await pool.getConnection();
+    try {
+      await connection.beginTransaction();
 
-    const setClause = Object.keys(validFields)
-      .map(key => `${key} = ?`)
-      .join(', ');
+      // Aktualizacja głównych pól
+      if (Object.keys(validFields).length > 0) {
+        const setClause = Object.keys(validFields)
+          .map(key => `${key} = ?`)
+          .join(', ');
+        const values = Object.values(validFields);
+        values.push(id);
 
-    const values = Object.values(validFields);
-    values.push(id);
+        await connection.query(
+          `UPDATE dinosaurs 
+           SET ${setClause}
+           WHERE id = ?`,
+          values
+        );
+      }
 
-    const [result] = await pool.query(
-      `UPDATE dinosaurs 
-       SET ${setClause}
-       WHERE id = ?`,
-      values
-    );
+      // Aktualizacja kategorii (many-to-many)
+      if (Array.isArray(updates.categories)) {
+        await connection.query('DELETE FROM dinosaur_categories WHERE dinosaur_id = ?', [id]);
+        if (updates.categories.length > 0) {
+          await connection.query(
+            `INSERT INTO dinosaur_categories (dinosaur_id, group_id) VALUES ${updates.categories.map(() => '(?, ?)').join(', ')}`,
+            updates.categories.flatMap(cat => [id, cat])
+          );
+        }
+      }
 
-    return result.affectedRows;
-  }
+      // Aktualizacja środowisk (many-to-many)
+      if (Array.isArray(updates.environments)) {
+        await connection.query('DELETE FROM dinosaur_environments WHERE dinosaur_id = ?', [id]);
+        if (updates.environments.length > 0) {
+          await connection.query(
+            `INSERT INTO dinosaur_environments (dinosaur_id, environment_id) VALUES ${updates.environments.map(() => '(?, ?)').join(', ')}`,
+            updates.environments.flatMap(env => [id, env])
+          );
+        }
+      }
+
+      await connection.commit();
+      return 1;
+    } catch (err) {
+      await connection.rollback();
+      throw err;
+    } finally {
+      connection.release();
+    }
+}
 
   static async delete(id) {
     const [result] = await pool.query(

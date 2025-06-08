@@ -1,4 +1,9 @@
 import Dinosaur from '../models/Dinosaur.js';
+import Species from '../models/Species.js';
+import Diet from '../models/Diet.js';
+import Era from '../models/Era.js';
+import Category from '../models/Category.js';
+import Environment from '../models/Environment.js';
 import asyncHandler from '../utils/asyncHandler.js';
 
 const getAllDinosaurs = asyncHandler(async (req, res) => {
@@ -74,11 +79,28 @@ const getTierList = asyncHandler(async (req, res) => {
   res.json({ success: true, data: tierList });
 });
 
+const getMetadata = asyncHandler(async (req, res) => {
+    try {
+        const [species, diets, eras, categories, environments] = await Promise.all([
+            Species.getAll(),
+            Diet.getAll(),
+            Era.getAll(),
+            Category.getAll(),
+            Environment.getAll()
+        ]);
+        res.json({ species, diets, eras, categories, environments });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Nie udało się pobrać metadanych' });
+    }
+});
+
 export {
   getAllDinosaurs,
   getDinosaurById,
   createDinosaur,
   updateDinosaur,
   deleteDinosaur,
-  getTierList
+  getTierList,
+  getMetadata
 };

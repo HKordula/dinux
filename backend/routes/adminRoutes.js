@@ -9,7 +9,8 @@ import {
 import {
   createDinosaur,
   updateDinosaur,
-  deleteDinosaur
+  deleteDinosaur,
+  getMetadata
 } from '../controllers/dinoController.js';
 import {
   createVoteSession,
@@ -29,6 +30,8 @@ const router = express.Router();
 router.post('/dinos', authenticate, authorize('admin'), createDinosaur);
 router.put('/dinos/:id', authenticate, authorize('admin'), updateDinosaur);
 router.delete('/dinos/:id', authenticate, authorize('admin'), deleteDinosaur);
+router.get('/metadata/', authenticate, authorize('admin'), getMetadata);
+
 
 // User management
 router.get('/users', authenticate, authorize('admin'), manageUsers);
