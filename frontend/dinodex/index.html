@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DINUX Admin</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+</head>
+<body>
+    <div id="navbar-include"></div>
+
+<!-- Hero Section -->
+     <div class="main">
+        <div class="main__img--container">
+          <img src="../assets/images/main-img.jpg" alt="pic" id="main__img">
+        </div>
+          <div class="main__container">
+            <div class="main__content">
+                <h1>DINO DEX</h1>
+                <button id="loadDinoTable" class="main__btn">Dinos</button>
+            </div>
+          </div>
+     </div>
+     
+    <!-- Dino Table Section -->
+    <div id="dinoTableContainer" class="dino-table-container">
+
+    </div>
+
+    <!-- Dino -->
+    <div id="dinoModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close" id="closeDinoModal">&times;</span>
+        <h3 id="modalFormTitle">Dodaj dinozaura</h3>
+        <form id="dinoModalForm">
+        <input type="hidden" id="modalDinoId">
+
+        <label>Name: <input type="text" id="modalDinoName" required></label><br>
+        <label>Description: <textarea id="modalDinoDescription" required></textarea></label><br>
+        <label>Species:
+            <select id="modalDinoSpeciesId" required></select>
+        </label><br>
+        <label>Era:
+            <select id="modalDinoEraId" required></select>
+        </label><br>
+        <label>Diet:
+            <select id="modalDinoDietId" required></select>
+        </label><br>
+        <label>Size: <input type="text" id="modalDinoSize"></label><br>
+        <label>Weight: <input type="text" id="modalDinoWeight"></label><br>
+        <label>Environments:
+            <select id="modalDinoEnvironments" multiple required></select>
+        </label><br>
+        <label>Categories:
+            <select id="modalDinoCategories" multiple required></select>
+        </label><br>
+        <label>Image URL: <input type="text" id="modalDinoImageUrl"></label><br>
+        <div style="margin:10px 0;">
+            <img id="modalDinoImagePreview" src="" alt="Preview" style="max-width:120px;max-height:90px;display:none;border:1px solid #ccc;">
+        </div>
+        <button type="submit">Zapisz</button>
+        <button type="button" id="cancelDinoModal">Anuluj</button>
+        </form>
+    </div>
+    </div>
+
+
+    <div id="footer-include"></div>
+
+    <script src="../assets/js/main.js"></script>
+    <script type="module" src="../assets/js/dinodex_script.js"></script>
+</body>
+</html>

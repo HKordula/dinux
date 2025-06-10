@@ -32,6 +32,12 @@ function setupNavbar() {
       </li>
     `;
 
+    menu.innerHTML += `
+      <li class="navbar__item">
+        <a href="/dinodex/index.html" class="navbar__links">DinoDex</a>
+      </li>
+  `
+
     //always About
     menu.innerHTML += `
       <li class="navbar__item">
