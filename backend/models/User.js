@@ -5,7 +5,7 @@ import constants from '../config/constants.js';
 class User {
   static async findByUsername(username) {
     const [rows] = await pool.query(
-      `SELECT id, username, email, password, role
+      `SELECT id, username, email, password, role, status
        FROM users 
        WHERE username = ?`,
       [username]
@@ -15,7 +15,7 @@ class User {
 
   static async findByEmail(email) {
     const [rows] = await pool.query(
-      `SELECT id, username, email, password, role
+      `SELECT id, username, email, password, role, status
        FROM users 
        WHERE email = ?`,
       [email]
@@ -25,7 +25,7 @@ class User {
 
   static async findById(id) {
     const [rows] = await pool.query(
-      `SELECT id, username, email, role
+      `SELECT id, username, email, role, status
        FROM users 
        WHERE id = ?`,
       [id]
@@ -37,8 +37,8 @@ class User {
     const hashedPassword = await bcrypt.hash(password, 10);
     const [result] = await pool.query(
       `INSERT INTO users 
-       (username, email, password, role)
-       VALUES (?, ?, ?, ?)`,
+       (username, email, password, role, status)
+       VALUES (?, ?, ?, ?, ?)`,
       [username, email, hashedPassword, constants.ROLES.USER]
     );
     return result.insertId;
@@ -85,14 +85,17 @@ class User {
     return result.affectedRows;
   }
 
-  static async updateRole(userId, role) {
-    const [result] = await pool.query('UPDATE users SET role=? WHERE id=?', [role, userId]);
+  static async updateRoleAndStatus(userId, role, status) {
+    const [result] = await pool.query(
+      'UPDATE users SET role=?, status=? WHERE id=?',
+      [role, status, userId]
+    );
     return result.affectedRows;
   }
 
   static async getAll() {
     const [rows] = await pool.query(
-      'SELECT id, username, email, role, created_at FROM users ORDER BY id'
+      'SELECT id, username, email, role, status, created_at FROM users ORDER BY id'
     );
     return rows;
   }

@@ -16,6 +16,9 @@ function attachFormHandler({ formId, endpoint, method = 'POST', storeToken = fal
           if (result.data.user && result.data.user.role) {
             localStorage.setItem('role', result.data.user.role);
           }
+          if (result.data.user && result.data.user.username) {
+            localStorage.setItem('username', result.data.user.username);
+          }
         }
         msgDiv.textContent = successMsg;
         msgDiv.style.color = 'green';

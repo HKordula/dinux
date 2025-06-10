@@ -53,6 +53,13 @@ const login = asyncHandler(async (req, res, next) => {
     error.statusCode = 401;
     throw error;
   }
+  // Blocked user check
+  if (user.status === 'blocked') {
+    return res.status(403).json({
+      success: false,
+      error: 'Your account is blocked. Please contact the administrator.'
+    });
+  }
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
     const error = new Error('Invalid credentials');

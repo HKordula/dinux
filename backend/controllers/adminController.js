@@ -32,12 +32,12 @@ const deleteUser = async (req, res, next) => {
 const updateUserStatus = async (req, res, next) => {
   try {
     const userId = req.params.id;
-    const { role } = req.body;
-    const affectedRows = await User.updateRole(userId, role);
+    const { role, status } = req.body;
+    const affectedRows = await User.updateRoleAndStatus(userId, role, status);
     if (affectedRows === 0) {
       return res.status(404).json({ success: false, error: 'User not found' });
     }
-    res.json({ success: true, message: 'User role updated' });
+    res.json({ success: true, message: 'User role and status updated' });
   } catch (err) {
     next(err);
   }

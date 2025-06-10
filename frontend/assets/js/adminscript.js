@@ -11,7 +11,6 @@ const modals = {
     cancel: document.getElementById('cancelDinoModal'),
     title: document.getElementById('modalFormTitle'),
     imageUrl: document.getElementById('modalDinoImageUrl'),
-    imagePreview: document.getElementById('modalDinoImagePreview'),
     id: document.getElementById('modalDinoId'),
     name: document.getElementById('modalDinoName'),
     description: document.getElementById('modalDinoDescription'),
@@ -107,7 +106,7 @@ async function fetchMetadata() {
     populateSelect('modalDinoCategories', metadata.categories || []);
     populateSelect('modalDinoEnvironments', metadata.environments || []);
   } catch (err) {
-    handleError('Nie udało się pobrać metadanych', err);
+    handleError('Failed to fetch metadata', err);
   }
 }
 
@@ -146,7 +145,7 @@ function renderTable(headers, rows, rowRenderer, addBtnText, addBtnHandler) {
   pageRows.forEach(rowData => table.appendChild(rowRenderer(rowData)));
 
   if (addBtnText && addBtnHandler) {
-    const addBtn = createButton(addBtnText, addBtnHandler);
+    const addBtn = createButton(addBtnText, addBtnHandler, 'btn-add');
     dinoTableContainer.appendChild(addBtn);
   }
   dinoTableContainer.appendChild(table);
@@ -165,7 +164,7 @@ function renderTable(headers, rows, rowRenderer, addBtnText, addBtnHandler) {
         currentPage--;
         renderTable(currentHeaders, currentRows, currentRowRenderer, currentAddBtnText, currentAddBtnHandler);
       }
-    });
+    },'btn-page');
     prevBtn.disabled = currentPage === 1;
 
     const nextBtn = createButton('→', () => {
@@ -173,11 +172,11 @@ function renderTable(headers, rows, rowRenderer, addBtnText, addBtnHandler) {
         currentPage++;
         renderTable(currentHeaders, currentRows, currentRowRenderer, currentAddBtnText, currentAddBtnHandler);
       }
-    });
+    },'btn-page');
     nextBtn.disabled = currentPage === totalPages;
 
     const pageInfo = document.createElement('span');
-    pageInfo.textContent = `Strona ${currentPage} z ${totalPages}`;
+    pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
 
     pagination.appendChild(prevBtn);
     pagination.appendChild(pageInfo);
@@ -218,8 +217,8 @@ function dinoRowRenderer(dino) {
     }</td>
   `;
   const actionsTd = document.createElement('td');
-  actionsTd.appendChild(createButton('Edytuj', () => showDinoModal(dino)));
-  actionsTd.appendChild(createButton('Usuń', () => deleteDino(dino.id), 'btn-delete'));
+  actionsTd.appendChild(createButton('Edit', () => showDinoModal(dino), 'btn-edit'));
+  actionsTd.appendChild(createButton('Delete', () => deleteDino(dino.id), 'btn-delete'));
   row.appendChild(actionsTd);
   return row;
 }
@@ -232,11 +231,11 @@ async function fetchAndDisplayDinoTable() {
       ['ID', 'Name', 'Species', 'Description', 'Era', 'Diet', 'Size', 'Weight', 'Environment', 'Category', 'Image', 'Actions'],
       dinos,
       dinoRowRenderer,
-      'Dodaj dinozaura',
+      'Add dinosaur',
       showDinoModal
     );
   } catch (error) {
-    handleError('Nie udało się załadować dinozaurów.', error);
+    handleError('Failed to load dinosaurs.', error);
   }
 }
 
@@ -248,12 +247,27 @@ function userRowRenderer(user) {
     <td>${user.username}</td>
     <td>${user.email}</td>
     <td>${user.role}</td>
+    <td>${user.status}</td>
     <td>${user.created_at ? new Date(user.created_at).toLocaleString() : ''}</td>
   `;
   const actionsTd = document.createElement('td');
-  actionsTd.appendChild(createButton('Edytuj', () => showUserEditForm(user)));
+  actionsTd.appendChild(createButton('Edit', () => showUserEditForm(user), 'btn-edit'));
+  actionsTd.appendChild(createButton('Delete', () => deleteUser(user.id, user.username), 'btn-delete'));
   row.appendChild(actionsTd);
   return row;
+}
+
+async function deleteUser(userId, username) {
+  const token = localStorage.getItem('token');
+  if (!confirm(`Are you sure you want to delete user "${username}" (ID: ${userId})?`)) return;
+  try {
+    const result = await apiRequest(`/api/admin/users/${userId}`, 'DELETE', null, token);
+    if (!result.success) throw new Error(result.error || 'Error deleting user');
+    alert(`User "${username}" (ID: ${userId}) has been deleted.`);
+    fetchAndDisplayUsersTable();
+  } catch (err) {
+    handleError('Error while deleting user.', err);
+  }
 }
 
 async function fetchAndDisplayUsersTable() {
@@ -261,14 +275,21 @@ async function fetchAndDisplayUsersTable() {
     const token = localStorage.getItem('token');
     const users = (await apiRequest('/api/admin/users', 'GET', null, token)).data;
     renderTable(
-      ['ID', 'Username', 'Email', 'Role', 'Created At', 'Actions'],
+      ['ID', 'Username', 'Email', 'Role', 'Status', 'Created At', 'Actions'],
       users,
       userRowRenderer
     );
   } catch (error) {
-    handleError('Nie udało się załadować użytkowników.', error);
+    handleError('Failed to load users.', error);
   }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  const username = localStorage.getItem('username'); // or get from your auth system
+  if (username) {
+    document.getElementById('admin-username').textContent = username;
+  }
+});
 
 // --- VOTE SESSIONS ---
 function voteSessionRowRenderer(session) {
@@ -281,9 +302,9 @@ function voteSessionRowRenderer(session) {
     <td>${session.choice2_name || session.choice2_id}</td>
   `;
   const actionsTd = document.createElement('td');
-  actionsTd.appendChild(createButton('Edytuj', () => showVoteSessionModal(session)));
-  actionsTd.appendChild(createButton('Usuń', () => deleteVoteSession(session.id), 'btn-delete'));
-  actionsTd.appendChild(createButton('Wyniki', () => showVoteResultsModal(session.id)));
+  actionsTd.appendChild(createButton('Edit', () => showVoteSessionModal(session)));
+  actionsTd.appendChild(createButton('Delete', () => deleteVoteSession(session.id), 'btn-delete'));
+  actionsTd.appendChild(createButton('Results', () => showVoteResultsModal(session.id)));
   row.appendChild(actionsTd);
   return row;
 }
@@ -293,14 +314,14 @@ async function fetchAndDisplayVoteSessionsTable() {
     const token = localStorage.getItem('token');
     const sessions = (await apiRequest('/api/admin/vote', 'GET', null, token)).data;
     renderTable(
-      ['ID', 'Tytuł', 'Opis', 'Dinozaur 1', 'Dinozaur 2', 'Akcje'],
+      ['ID', 'Title', 'Description', 'Dinosaur 1', 'Dinosaur 2', 'Actions'],
       sessions,
       voteSessionRowRenderer,
-      'Dodaj sesję głosowania',
+      'Add voting session',
       showVoteSessionModal
     );
   } catch (error) {
-    handleError('Nie udało się załadować sesji głosowania.', error);
+    handleError('Failed to load voting sessions.', error);
   }
 }
 
@@ -309,7 +330,7 @@ function showDinoModal(dino = null) {
   fetchMetadata().then(() => {
     const m = modals.dino;
     m.modal.style.display = 'block';
-    m.title.textContent = dino ? 'Edytuj dinozaura' : 'Dodaj dinozaura';
+    m.title.textContent = dino && dino.id ? 'Edit dinosaur' : 'Add dinosaur';
     m.form.reset();
     m.id.value = dino?.id || '';
     m.name.value = dino?.name || '';
@@ -317,8 +338,6 @@ function showDinoModal(dino = null) {
     m.size.value = dino?.size || '';
     m.weight.value = dino?.weight || '';
     m.imageUrl.value = dino?.image_url || '';
-    m.imagePreview.style.display = dino?.image_url ? 'block' : 'none';
-    m.imagePreview.src = dino?.image_url || '';
     if (dino) {
       m.species.value = dino.species_id;
       m.diet.value = dino.diet_id;
@@ -328,18 +347,21 @@ function showDinoModal(dino = null) {
     }
   });
 }
-function hideDinoModal() { modals.dino.modal.style.display = 'none'; }
+function hideDinoModal() {
+   modals.dino.modal.style.display = 'none'; 
+  }
+
 modals.dino.close.onclick = hideDinoModal;
 modals.dino.cancel.onclick = hideDinoModal;
-modals.dino.imageUrl.addEventListener('input', () => {
-  const url = modals.dino.imageUrl.value.trim();
-  if (url) {
-    modals.dino.imagePreview.src = url;
-    modals.dino.imagePreview.style.display = 'block';
-  } else {
-    modals.dino.imagePreview.style.display = 'none';
-  }
-});
+
+
+function hideUserEditModal() {
+  modals.user.modal.style.display = 'none';
+}
+
+modals.user.close.onclick = hideUserEditModal;
+modals.user.cancel.onclick = hideUserEditModal;
+
 modals.dino.form.addEventListener('submit', async function (e) {
   e.preventDefault();
   const token = localStorage.getItem('token');
@@ -360,48 +382,55 @@ modals.dino.form.addEventListener('submit', async function (e) {
   const method = id ? 'PUT' : 'POST';
   try {
     const result = await apiRequest(url, method, dino, token);
-    if (!result.success) throw new Error(result.error || 'Nie udało się zapisać dinozaura');
-    alert('Dinozaur zapisany pomyślnie!');
+    if (!result.success) throw new Error(result.error || 'Failed to save dinosaur');
+    alert('Dinosaur saved successfully!');
     hideDinoModal();
     fetchAndDisplayDinoTable();
   } catch (error) {
-    alert('Wystąpił błąd przy zapisie.');
+    alert('Error saving dinosaur.');
   }
 });
 async function deleteDino(id) {
   const token = localStorage.getItem('token');
-  if (!confirm(`Na pewno chcesz usunąć dinozaura o ID ${id}?`)) return;
+  if (!confirm(`Are you sure you want to delete dinosaur with ID ${id}?`)) return;
   try {
     const result = await apiRequest(`/api/admin/dinos/${id}`, 'DELETE', null, token);
-    if (!result.success) throw new Error(result.error || 'Błąd usuwania dinozaura');
-    alert(`Dinozaur ID ${id} został usunięty.`);
+    if (!result.success) throw new Error(result.error || 'Error deleting dinosaur');
+    alert(`Dinosaur ID ${id} has been deleted.`);
     fetchAndDisplayDinoTable();
   } catch (err) {
-    handleError('Błąd podczas usuwania.', err);
+    handleError('Error while deleting.', err);
   }
 }
 
 // --- MODAL LOGIC (user) ---
+// ...existing code...
 function showUserEditForm(user) {
   const m = modals.user;
   m.modal.style.display = 'block';
   m.id.value = user.id;
   m.role.value = user.role;
+  // Set status select value
+  const statusSelect = document.getElementById('editUserStatus');
+  if (statusSelect) {
+    statusSelect.value = user.status || 'activated';
+  }
 }
-function hideUserEditModal() { modals.user.modal.style.display = 'none'; }
-modals.user.close.onclick = hideUserEditModal;
-modals.user.cancel.onclick = hideUserEditModal;
+// ...existing code...
 modals.user.form.addEventListener('submit', async function(e) {
   e.preventDefault();
   const userId = modals.user.id.value;
   const newRole = modals.user.role.value;
-  await updateUserRole(userId, newRole);
+  const newStatus = document.getElementById('editUserStatus').value;
+  await updateUserRoleAndStatus(userId, newRole, newStatus);
   hideUserEditModal();
 });
-async function updateUserRole(userId, newRole) {
+// ...existing code...
+
+async function updateUserRoleAndStatus(userId, newRole, newStatus) {
   const token = localStorage.getItem('token');
   try {
-    const result = await apiRequest(`/api/admin/users/${userId}/status`, 'PUT', { role: newRole }, token);
+    const result = await apiRequest(`/api/admin/users/${userId}/status`, 'PUT', { role: newRole, status: newStatus }, token);
     if (!result.success) throw new Error(result.error || 'Failed to update user');
     alert('User updated!');
     fetchAndDisplayUsersTable();
@@ -414,7 +443,7 @@ async function updateUserRole(userId, newRole) {
 function showVoteSessionModal(session = null) {
   const m = modals.voteSession;
   m.modal.style.display = 'block';
-  m.title.textContent = session ? 'Edytuj sesję głosowania' : 'Dodaj sesję głosowania';
+  m.title.textContent = session ? 'Edit voting session' : 'Add voting session';
   m.form.reset();
   m.id.value = session?.id || '';
   m.name.value = session?.title || '';
@@ -445,24 +474,24 @@ modals.voteSession.form.addEventListener('submit', async function(e) {
   const method = id ? 'PUT' : 'POST';
   try {
     const result = await apiRequest(url, method, session, token);
-    if (!result.success) throw new Error(result.error || 'Nie udało się zapisać sesji');
-    alert('Sesja głosowania zapisana!');
+    if (!result.success) throw new Error(result.error || 'Failed to save session');
+    alert('Voting session saved!');
     hideVoteSessionModal();
     fetchAndDisplayVoteSessionsTable();
   } catch (error) {
-    alert('Wystąpił błąd przy zapisie sesji.');
+    alert('Error saving voting session.');
   }
 });
 async function deleteVoteSession(id) {
   const token = localStorage.getItem('token');
-  if (!confirm(`Na pewno chcesz usunąć sesję głosowania o ID ${id}?`)) return;
+  if (!confirm(`Are you sure you want to delete voting session with ID ${id}?`)) return;
   try {
     const result = await apiRequest(`/api/admin/vote/${id}`, 'DELETE', null, token);
-    if (!result.success) throw new Error(result.error || 'Błąd usuwania sesji');
-    alert(`Sesja głosowania ID ${id} została usunięta.`);
+    if (!result.success) throw new Error(result.error || 'Error deleting session');
+    alert(`Voting session ID ${id} has been deleted.`);
     fetchAndDisplayVoteSessionsTable();
   } catch (err) {
-    handleError('Błąd podczas usuwania sesji.', err);
+    handleError('Error while deleting session.', err);
   }
 }
 
@@ -470,7 +499,7 @@ async function deleteVoteSession(id) {
 function showVoteResultsModal(sessionId) {
   const m = modals.voteResults;
   m.modal.style.display = 'block';
-  m.content.innerHTML = 'Ładowanie...';
+  m.content.innerHTML = 'Loading...';
   fetchVoteResults(sessionId);
 }
 function hideVoteResultsModal() { modals.voteResults.modal.style.display = 'none'; }
@@ -481,17 +510,17 @@ async function fetchVoteResults(sessionId) {
     const res = await apiRequest(`/api/admin/vote/${sessionId}/results`, 'GET', null, token);
     const results = res.data.results || [];
     if (!results.length) {
-      modals.voteResults.content.innerHTML = '<p>Brak głosów w tej sesji.</p>';
+      modals.voteResults.content.innerHTML = '<p>No votes in this session.</p>';
       return;
     }
-    let html = '<table><tr><th>Dinozaur</th><th>Liczba głosów</th></tr>';
+    let html = '<table><tr><th>Dinosaur</th><th>Vote count</th></tr>';
     results.forEach(r => {
       html += `<tr><td>${r.name}</td><td>${r.vote_count}</td></tr>`;
     });
     html += '</table>';
     modals.voteResults.content.innerHTML = html;
   } catch (err) {
-    modals.voteResults.content.innerHTML = 'Błąd ładowania wyników.';
+    modals.voteResults.content.innerHTML = 'Error loading results.';
   }
 }
 
