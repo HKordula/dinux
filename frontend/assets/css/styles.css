@@ -1079,3 +1079,179 @@
     border: none;
     cursor: pointer;
 }
+
+/* Dino Dex */
+.dino-filter-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 0px;
+  background: #414833;
+  padding: 0 24px 0 0;
+}
+
+#dinoSortSelect {
+  background: #A4AC86;
+  color: #333D29;
+  border: 1.5px solid #7F4F24;
+  border-radius: 4px;
+  padding: 8px 18px;
+  font-size: 1rem;
+  font-weight: 500;
+  outline: none;
+  margin-left: 8px;
+  transition: border 0.2s;
+}
+
+#dinoSortSelect:focus {
+  border-color: #936639;
+}
+
+.dino-card-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  justify-content: center;
+  background: #414833;
+  padding: 40px 0 60px 0;
+  border-radius: 0px;
+}
+
+.dino-card {
+  width: 260px;
+  height: 340px;
+  border-radius: 12px;
+  background-image: linear-gradient(
+      to bottom,
+      rgba(0,0,0,0) 0%,
+      rgba(65,72,51,0.12) 100%
+    ),
+    linear-gradient(135deg, #C2C5AA 0%, #A4AC86 100%);
+  box-shadow: 0 4px 24px rgba(65, 72, 51, 0.10);
+  color: #333D29;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 18px 16px 12px 16px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.18s, box-shadow 0.18s;
+  border: 2px solid #A4AC86;
+}
+
+.dino-card:hover {
+  transform: scale(1.045);
+  box-shadow: 0 8px 32px rgba(127, 79, 36, 0.18);
+  border-color: #7F4F24;
+}
+
+.dino-card-img {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #e9edc9;
+  margin-bottom: 18px;
+  border: 1.5px solid #C2C5AA;
+}
+
+.dino-card-name {
+  margin-top: 8px;
+  font-weight: bold;
+  font-size: 1.25em;
+  color: #7F4F24;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 4px #C2C5AA33;
+  margin-bottom: 6px;
+}
+
+.dino-card-more-btn {
+  margin-top: auto;
+  background: #7F4F24;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 22px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.dino-card-more-btn:hover {
+  background: #936639;
+}
+
+/* Dino detail subsite */
+.dino-detail {
+  max-width: 480px;
+  margin: 40px auto 0 auto;
+  background: linear-gradient(135deg, #C2C5AA 0%, #A4AC86 100%);
+  border-radius: 18px;
+  box-shadow: 0 6px 32px rgba(65, 72, 51, 0.13);
+  padding: 36px 32px 28px 32px;
+  text-align: center;
+  border: 2px solid #A4AC86;
+  color: #333D29;
+}
+
+.dino-detail-img {
+  width: 100%;
+  max-width: 320px;
+  border-radius: 10px;
+  margin-bottom: 18px;
+  border: 1.5px solid #C2C5AA;
+  background: #e9edc9;
+}
+
+.dino-detail h2 {
+  color: #7F4F24;
+  font-size: 2.1rem;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 4px #C2C5AA33;
+}
+
+.dino-detail p {
+  font-size: 1.13rem;
+  margin: 8px 0;
+  color: #414833;
+}
+
+.dino-detail button {
+  color: #fff;
+  padding: 10px 22px;
+  border: none;
+  outline: none;
+  border-radius: 4px;
+  background: #7F4F24;
+  font-size: 1rem;
+  cursor: pointer;
+  margin: 18px 8px 0 8px;
+  transition: background 0.2s;
+}
+
+.dino-detail button:hover {
+  background: #936639;
+}
+
+@media screen and (max-width: 600px) {
+  .dino-card-grid {
+    gap: 16px;
+    padding: 20px 0 30px 0;
+  }
+  .dino-card {
+    width: 95vw;
+    max-width: 320px;
+    height: auto;
+    min-height: 260px;
+    padding: 12px 8px 12px 8px;
+  }
+  .dino-detail {
+    padding: 18px 8px 18px 8px;
+  }
+}
