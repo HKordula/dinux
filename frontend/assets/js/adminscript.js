@@ -124,7 +124,7 @@ let currentAddBtnText = null;
 let currentAddBtnHandler = null;
 
 // --- TABLE RENDERERS ---
-function renderTable(headers, rows, rowRenderer, addBtnText, addBtnHandler) {
+function renderTable(headers, rows, rowRenderer, addBtnText, addBtnHandler, tableTitle = '') {
   dinoTableContainer.innerHTML = '';
   currentRows = rows;
   currentHeaders = headers;
@@ -144,46 +144,46 @@ function renderTable(headers, rows, rowRenderer, addBtnText, addBtnHandler) {
 
   pageRows.forEach(rowData => table.appendChild(rowRenderer(rowData)));
 
+  // --- Header row with add button, title, and pagination ---
+  const headerRow = document.createElement('div');
+  headerRow.className = 'dino-table-header-row';
+
+  // Add button (left)
   if (addBtnText && addBtnHandler) {
     const addBtn = createButton(addBtnText, addBtnHandler, 'btn-add');
-    dinoTableContainer.appendChild(addBtn);
+    headerRow.appendChild(addBtn);
+  } else {
+    headerRow.appendChild(document.createElement('div'));
   }
+
+  // Pagination (right) -- always show arrows
+  const pagination = document.createElement('div');
+  pagination.className = 'dino-table-pagination-top';
+
+  const prevBtn = createButton('⬅️', () => {
+    if (currentPage > 1) {
+      currentPage--;
+      renderTable(currentHeaders, currentRows, currentRowRenderer, currentAddBtnText, currentAddBtnHandler, tableTitle);
+    }
+  }, 'btn-page');
+  prevBtn.disabled = currentPage === 1;
+
+  const nextBtn = createButton('➡️', () => {
+    if (currentPage < totalPages) {
+      currentPage++;
+      renderTable(currentHeaders, currentRows, currentRowRenderer, currentAddBtnText, currentAddBtnHandler, tableTitle);
+    }
+  }, 'btn-page');
+  nextBtn.disabled = currentPage === totalPages;
+
+  pagination.appendChild(prevBtn);
+  pagination.appendChild(nextBtn);
+
+  headerRow.appendChild(pagination);
+
+  // Insert header row above the table
+  dinoTableContainer.appendChild(headerRow);
   dinoTableContainer.appendChild(table);
-
-  // PAGINATION CONTROLS
-  if (totalPages > 1) {
-    const pagination = document.createElement('div');
-    pagination.style.display = 'flex';
-    pagination.style.justifyContent = 'center';
-    pagination.style.alignItems = 'center';
-    pagination.style.gap = '12px';
-    pagination.style.margin = '20px 0';
-
-    const prevBtn = createButton('←', () => {
-      if (currentPage > 1) {
-        currentPage--;
-        renderTable(currentHeaders, currentRows, currentRowRenderer, currentAddBtnText, currentAddBtnHandler);
-      }
-    },'btn-page');
-    prevBtn.disabled = currentPage === 1;
-
-    const nextBtn = createButton('→', () => {
-      if (currentPage < totalPages) {
-        currentPage++;
-        renderTable(currentHeaders, currentRows, currentRowRenderer, currentAddBtnText, currentAddBtnHandler);
-      }
-    },'btn-page');
-    nextBtn.disabled = currentPage === totalPages;
-
-    const pageInfo = document.createElement('span');
-    pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
-
-    pagination.appendChild(prevBtn);
-    pagination.appendChild(pageInfo);
-    pagination.appendChild(nextBtn);
-
-    dinoTableContainer.appendChild(pagination);
-  }
 }
 
 // --- DINOS ---
@@ -232,13 +232,12 @@ async function fetchAndDisplayDinoTable() {
       dinos,
       dinoRowRenderer,
       'Add dinosaur',
-      showDinoModal
+      showDinoModal,
     );
   } catch (error) {
     handleError('Failed to load dinosaurs.', error);
   }
 }
-
 // --- USERS ---
 function userRowRenderer(user) {
   const row = document.createElement('tr');
@@ -277,10 +276,25 @@ async function fetchAndDisplayUsersTable() {
     renderTable(
       ['ID', 'Username', 'Email', 'Role', 'Status', 'Created At', 'Actions'],
       users,
-      userRowRenderer
+      userRowRenderer,
+      'Add user',           // <-- Button text
+      showUserAddModal,     // <-- Button handler (implement this function to show your add user modal)
     );
   } catch (error) {
     handleError('Failed to load users.', error);
+  }
+}
+
+function showUserAddModal() {
+  const m = modals.user;
+  m.modal.style.display = 'block';
+  m.form.reset();
+  m.id.value = '';
+  m.role.value = 'user';
+  // Set status select value to default (e.g. 'activated')
+  const statusSelect = document.getElementById('editUserStatus');
+  if (statusSelect) {
+    statusSelect.value = 'activated';
   }
 }
 
@@ -318,7 +332,7 @@ async function fetchAndDisplayVoteSessionsTable() {
       sessions,
       voteSessionRowRenderer,
       'Add voting session',
-      showVoteSessionModal
+      showVoteSessionModal,
     );
   } catch (error) {
     handleError('Failed to load voting sessions.', error);
@@ -533,16 +547,19 @@ function hideAllModals() {
 // --- EVENT LISTENERS ---
 async function showDinosWithMetadata() {
   hideAllModals();
+  currentPage = 1;
   await fetchMetadata();
   await fetchAndDisplayDinoTable();
 }
 async function showUsersWithMetadata() {
   hideAllModals();
+  currentPage = 1;
   await fetchMetadata();
   await fetchAndDisplayUsersTable();
 }
 async function showVotesWithMetadata() {
   hideAllModals();
+  currentPage = 1;
   await fetchMetadata();
   await fetchAndDisplayVoteSessionsTable();
 }

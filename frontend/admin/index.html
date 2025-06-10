@@ -11,15 +11,17 @@
 
 <!-- Hero Section -->
      <div class="main">
-          <div class="admin__container">
-            <div class="admin__content">
+          <div class="admin__content">
+            <div class="admin__content-text">
                 <h2>Welcome, <span id="admin-username">Admin</span></h2>
                 <p>Manage users, dinosaurs, and votes below.</p>
-                <button id="loadDinoTable" class="main__btn">Dinos 🦖</button>
-                <button id="loadUsersTable" class="main__btn">Users 👨🏻</button>
-                <button id="loadVotesTable" class="main__btn">Votes ☑️</button>
             </div>
-          </div>
+            <div class="admin__btn-group">
+                <button id="loadDinoTable" class="main__btn">Dinos</button>
+                <button id="loadUsersTable" class="main__btn">Users</button>
+                <button id="loadVotesTable" class="main__btn">Votes</button>
+            </div>
+</div>
      </div>
      
      
@@ -32,7 +34,7 @@
     <div id="dinoModal" class="modal" style="display:none;">
     <div class="modal-content">
         <span class="close" id="closeDinoModal">&times;</span>
-        <h3 id="modalFormTitle">Dodaj dinozaura</h3>
+        <h3 id="modalFormTitle">Add dinosaur</h3>
         <form id="dinoModalForm">
             <input type="hidden" id="modalDinoId">
 
