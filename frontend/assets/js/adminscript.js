@@ -116,17 +116,75 @@ async function fetchAllDinos() {
   return dinos || [];
 }
 
+let currentPage = 1;
+const pageSize = 10;
+let currentRows = [];
+let currentHeaders = [];
+let currentRowRenderer = null;
+let currentAddBtnText = null;
+let currentAddBtnHandler = null;
+
 // --- TABLE RENDERERS ---
 function renderTable(headers, rows, rowRenderer, addBtnText, addBtnHandler) {
   dinoTableContainer.innerHTML = '';
+  currentRows = rows;
+  currentHeaders = headers;
+  currentRowRenderer = rowRenderer;
+  currentAddBtnText = addBtnText;
+  currentAddBtnHandler = addBtnHandler;
+
   const table = document.createElement('table');
+  table.className = 'dino-table';
   table.appendChild(createHeaderRow(headers));
-  rows.forEach(rowData => table.appendChild(rowRenderer(rowData)));
+
+  // PAGINATION
+  const totalPages = Math.ceil(rows.length / pageSize);
+  const start = (currentPage - 1) * pageSize;
+  const end = start + pageSize;
+  const pageRows = rows.slice(start, end);
+
+  pageRows.forEach(rowData => table.appendChild(rowRenderer(rowData)));
+
   if (addBtnText && addBtnHandler) {
     const addBtn = createButton(addBtnText, addBtnHandler);
     dinoTableContainer.appendChild(addBtn);
   }
   dinoTableContainer.appendChild(table);
+
+  // PAGINATION CONTROLS
+  if (totalPages > 1) {
+    const pagination = document.createElement('div');
+    pagination.style.display = 'flex';
+    pagination.style.justifyContent = 'center';
+    pagination.style.alignItems = 'center';
+    pagination.style.gap = '12px';
+    pagination.style.margin = '20px 0';
+
+    const prevBtn = createButton('←', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderTable(currentHeaders, currentRows, currentRowRenderer, currentAddBtnText, currentAddBtnHandler);
+      }
+    });
+    prevBtn.disabled = currentPage === 1;
+
+    const nextBtn = createButton('→', () => {
+      if (currentPage < totalPages) {
+        currentPage++;
+        renderTable(currentHeaders, currentRows, currentRowRenderer, currentAddBtnText, currentAddBtnHandler);
+      }
+    });
+    nextBtn.disabled = currentPage === totalPages;
+
+    const pageInfo = document.createElement('span');
+    pageInfo.textContent = `Strona ${currentPage} z ${totalPages}`;
+
+    pagination.appendChild(prevBtn);
+    pagination.appendChild(pageInfo);
+    pagination.appendChild(nextBtn);
+
+    dinoTableContainer.appendChild(pagination);
+  }
 }
 
 // --- DINOS ---
@@ -168,6 +226,7 @@ function dinoRowRenderer(dino) {
 
 async function fetchAndDisplayDinoTable() {
   try {
+    currentPage = 1;
     const dinos = (await apiRequest('/api/dinos')).data;
     renderTable(
       ['ID', 'Name', 'Species', 'Description', 'Era', 'Diet', 'Size', 'Weight', 'Environment', 'Category', 'Image', 'Actions'],
@@ -272,7 +331,6 @@ function showDinoModal(dino = null) {
 function hideDinoModal() { modals.dino.modal.style.display = 'none'; }
 modals.dino.close.onclick = hideDinoModal;
 modals.dino.cancel.onclick = hideDinoModal;
-window.onclick = function(event) { if (event.target === modals.dino.modal) hideDinoModal(); };
 modals.dino.imageUrl.addEventListener('input', () => {
   const url = modals.dino.imageUrl.value.trim();
   if (url) {
@@ -333,9 +391,6 @@ function showUserEditForm(user) {
 function hideUserEditModal() { modals.user.modal.style.display = 'none'; }
 modals.user.close.onclick = hideUserEditModal;
 modals.user.cancel.onclick = hideUserEditModal;
-window.addEventListener('click', function(event) {
-  if (event.target === modals.user.modal) hideUserEditModal();
-});
 modals.user.form.addEventListener('submit', async function(e) {
   e.preventDefault();
   const userId = modals.user.id.value;
@@ -376,9 +431,6 @@ function showVoteSessionModal(session = null) {
 function hideVoteSessionModal() { modals.voteSession.modal.style.display = 'none'; }
 modals.voteSession.close.onclick = hideVoteSessionModal;
 modals.voteSession.cancel.onclick = hideVoteSessionModal;
-window.addEventListener('click', function(event) {
-  if (event.target === modals.voteSession.modal) hideVoteSessionModal();
-});
 modals.voteSession.form.addEventListener('submit', async function(e) {
   e.preventDefault();
   const token = localStorage.getItem('token');
@@ -423,9 +475,6 @@ function showVoteResultsModal(sessionId) {
 }
 function hideVoteResultsModal() { modals.voteResults.modal.style.display = 'none'; }
 modals.voteResults.close.onclick = hideVoteResultsModal;
-window.addEventListener('click', function(event) {
-  if (event.target === modals.voteResults.modal) hideVoteResultsModal();
-});
 async function fetchVoteResults(sessionId) {
   try {
     const token = localStorage.getItem('token');
@@ -446,19 +495,37 @@ async function fetchVoteResults(sessionId) {
   }
 }
 
+function hideAllModals() {
+  Object.values(modals).forEach(m => {
+    if (m.modal) m.modal.style.display = 'none';
+  });
+}
+
 // --- EVENT LISTENERS ---
 async function showDinosWithMetadata() {
+  hideAllModals();
   await fetchMetadata();
   await fetchAndDisplayDinoTable();
 }
 async function showUsersWithMetadata() {
+  hideAllModals();
   await fetchMetadata();
   await fetchAndDisplayUsersTable();
 }
 async function showVotesWithMetadata() {
+  hideAllModals();
   await fetchMetadata();
   await fetchAndDisplayVoteSessionsTable();
 }
+
+window.addEventListener('click', function(event) {
+  Object.values(modals).forEach(m => {
+    if (m.modal && event.target === m.modal) {
+      m.modal.style.display = 'none';
+    }
+  });
+});
+
 document.getElementById('loadDinoTable').addEventListener('click', showDinosWithMetadata);
 document.getElementById('loadUsersTable').addEventListener('click', showUsersWithMetadata);
 document.getElementById('loadVotesTable').addEventListener('click', showVotesWithMetadata);
