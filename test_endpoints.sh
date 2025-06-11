@@ -171,11 +171,11 @@ test_positive "PUT" "/admin/users/$USER_ID/status" "PUT /admin/users/$USER_ID/st
 test_positive "PUT" "/admin/users/$USER_ID/reset-password" "PUT /admin/users/$USER_ID/reset-password" "$ADMIN_TOKEN"
 
 # Admin vote CRUD
-NEW_VOTE=$(api_call "POST" "/admin/vote" "$ADMIN_TOKEN" '{"title":"API Test Voting","description":"Vote for the best!"}')
+NEW_VOTE=$(api_call "POST" "/admin/vote" "$ADMIN_TOKEN" '{"title":"API Test Voting","description":"Vote for the best!","choice1_id":1,"choice2_id":2}')
 check_success "$NEW_VOTE" "POST /admin/vote" "true"
 NEW_VOTE_ID=$(echo "$NEW_VOTE" | jq -r '.sessionId')
 
-test_positive "PUT" "/admin/vote/$NEW_VOTE_ID" "PUT /admin/vote/$NEW_VOTE_ID" "$ADMIN_TOKEN" '{"title":"API Test Voting Updated"}'
+test_positive "PUT" "/admin/vote/$NEW_VOTE_ID" "PUT /admin/vote/$NEW_VOTE_ID" "$ADMIN_TOKEN" '{"title":"API Test Voting Updated","description":"Vote for the best!","choice1_id":1,"choice2_id":2}'
 test_positive "DELETE" "/admin/vote/$NEW_VOTE_ID" "DELETE /admin/vote/$NEW_VOTE_ID" "$ADMIN_TOKEN"
 test_positive "GET" "/admin/vote" "GET /admin/vote" "$ADMIN_TOKEN"
 
