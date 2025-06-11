@@ -47,6 +47,7 @@ INSERT INTO users (username, email, password, role, status) VALUES
 ('hubert', 'hubert@dinux.com', '$2b$10$uMMf.R72y6sTQkDn5mJ1UuXuYszrfOed64dgVBajvjfmI0AuoOCS2', 'user', 'activated');
 
 INSERT INTO favorites (user_id, dinosaur_id) VALUES
+(1, 3),
 (2, 1),
 (2, 2), 
 (3, 3);

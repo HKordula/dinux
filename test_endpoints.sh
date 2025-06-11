@@ -142,6 +142,15 @@ test_negative "POST" "/register" "Register user with duplicate username" "" '{"u
 
 test_positive "GET" "/dinos" "GET /dinos"
 test_positive "GET" "/dinos/1" "GET /dinos/1"
+DINO_ONE=$(api_call "GET" "/dinos/3")
+LIKES_ONE=$(echo "$DINO_ONE" | jq -r '.data.likes')
+if [ "$LIKES_ONE" == "2" ]; then
+  echo -e "\033[0;32m[PASS]\033[0m Dino 2 likes after add"
+  PASS=$((PASS+1))
+else
+  echo -e "\033[0;31m[FAIL]\033[0m Dino 2 likes after add: $LIKES_ONE"
+  FAIL=$((FAIL+1))
+fi
 test_positive "GET" "/species" "GET /species"
 test_positive "GET" "/tierlist" "GET /tierlist"
 

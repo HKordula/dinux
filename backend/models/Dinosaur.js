@@ -45,7 +45,8 @@ class Dinosaur {
         e.name AS era, 
         di.name AS diet,
         GROUP_CONCAT(DISTINCT c.id) AS category_ids,
-        GROUP_CONCAT(DISTINCT env.id) AS environment_ids
+        GROUP_CONCAT(DISTINCT env.id) AS environment_ids,
+        COUNT(DISTINCT f.user_id) AS likes
       FROM dinosaurs d
       LEFT JOIN species s ON d.species_id = s.id
       LEFT JOIN eras e ON d.era_id = e.id
@@ -54,6 +55,7 @@ class Dinosaur {
       LEFT JOIN categories c ON dc.group_id = c.id
       LEFT JOIN dinosaur_environments de ON d.id = de.dinosaur_id
       LEFT JOIN environments env ON de.environment_id = env.id
+      LEFT JOIN favorites f ON d.id = f.dinosaur_id
     `;
 
     const whereClauses = [];
@@ -82,7 +84,8 @@ class Dinosaur {
     return dinosaurs.map(dino => ({
       ...dino,
       categories: dino.category_ids ? dino.category_ids.split(',').map(Number) : [],
-      environments: dino.environment_ids ? dino.environment_ids.split(',').map(Number) : []
+      environments: dino.environment_ids ? dino.environment_ids.split(',').map(Number) : [],
+      likes: Number(dino.likes) || 0
     }));
   }
 
@@ -93,7 +96,8 @@ class Dinosaur {
         e.name AS era, 
         di.name AS diet,
         GROUP_CONCAT(DISTINCT c.id) AS category_ids,
-        GROUP_CONCAT(DISTINCT env.id) AS environment_ids
+        GROUP_CONCAT(DISTINCT env.id) AS environment_ids,
+        COUNT(DISTINCT f.user_id) AS likes
       FROM dinosaurs d
       LEFT JOIN species s ON d.species_id = s.id
       LEFT JOIN eras e ON d.era_id = e.id
@@ -102,15 +106,17 @@ class Dinosaur {
       LEFT JOIN categories c ON dc.group_id = c.id
       LEFT JOIN dinosaur_environments de ON d.id = de.dinosaur_id
       LEFT JOIN environments env ON de.environment_id = env.id
+      LEFT JOIN favorites f ON d.id = f.dinosaur_id
       WHERE d.id = ?
       GROUP BY d.id`,
       [id]
     );
     const dino = dinosaurs[0];
-    return {
+      return {
       ...dino,
       categories: dino.category_ids ? dino.category_ids.split(',').map(Number) : [],
-      environments: dino.environment_ids ? dino.environment_ids.split(',').map(Number) : []
+      environments: dino.environment_ids ? dino.environment_ids.split(',').map(Number) : [],
+      likes: Number(dino.likes) || 0
     };
   }
 
