@@ -115,7 +115,17 @@ class Vote {
 
   static async getSessionsVotedByUser(userId) {
     const [rows] = await pool.query(
-      `SELECT DISTINCT vote_session_id FROM votes WHERE user_id = ?`,
+      `SELECT 
+          vs.id AS session_id, 
+          vs.title, 
+          vs.description,
+          d.id AS dinosaur_id,
+          d.name AS dinosaur_name
+      FROM votes v
+      JOIN vote_sessions vs ON v.vote_session_id = vs.id
+      JOIN dinosaurs d ON v.dinosaur_id = d.id
+      WHERE v.user_id = ?
+      GROUP BY vs.id, vs.title, vs.description, d.id, d.name`,
       [userId]
     );
     return rows;

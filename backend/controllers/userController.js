@@ -4,6 +4,17 @@ import Favorite from '../models/Favorite.js';
 import Vote from '../models/Vote.js';
 import asyncHandler from '../utils/asyncHandler.js';
 
+const getMe = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user.id);
+  if (!user) {
+    return res.status(404).json({ success: false, error: 'User not found' });
+  }
+
+  // lets not send password :3
+  const { password, ...safeUser } = user;
+  res.json({ success: true, data: safeUser });
+});
+
 const getFavorites = asyncHandler(async (req, res) => {
   const favorites = await Favorite.getFavorites(req.user.id);
   res.json({
@@ -54,9 +65,8 @@ const updateProfile = async (req, res, next) => {
 
     const newUsername = username || user.username;
     const newEmail = email || user.email;
-    const newPassword = password ? await bcrypt.hash(password, 10) : user.password;
 
-    await User.update(userId, { username: newUsername, email: newEmail, password: newPassword });
+    await User.update(userId, { username: newUsername, email: newEmail, password });
     res.json({ success: true, message: 'Profile updated' });
   } catch (err) {
     next(err);
@@ -78,6 +88,7 @@ const getMyVotedSessions = asyncHandler(async (req, res) => {
 });
 
 export {
+  getMe,
   getFavorites,
   addFavorite,
   removeFavorite,

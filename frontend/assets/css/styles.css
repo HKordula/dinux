@@ -875,7 +875,6 @@
   background: #582F0E;
 }
 
-
 .admin__container {
     position: relative;
     display: flex;
@@ -907,7 +906,7 @@
 
 .admin__btn-group {
     display: flex;
-    gap: 18px;
+    gap: 20px;
 }
 
 .admin__btn-group .main__btn {
@@ -971,8 +970,10 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 12px;
+    margin-top: 12px;         /* Add this for upper gap */
     width: 100%;
     gap: 16px;
+    min-height: 44px;         /* Ensures consistent height */
 }
 
 .dino-table-title {
@@ -983,6 +984,16 @@
     letter-spacing: 1px;
 }
 
+.no-scroll-select {
+    overflow: hidden !important;
+    height: auto !important;
+    min-height: 2em;
+    max-height: none;
+}
+.no-scroll-select option {
+    white-space: normal;
+}
+
 /* Style for pagination controls in header */
 .dino-table-pagination-top {
     display: flex;
@@ -990,10 +1001,53 @@
     gap: 12px;
 }
 
-/* --- Admin Table Action Buttons --- */
+/* Responsive admin hero section */
+@media screen and (max-width: 900px) {
+  .admin__content {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px 24px;
+    gap: 18px;
+  }
+  .admin__btn-group {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+  }
+  .admin__btn-group .main__btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 48px;
+    font-size: 1.2rem;
+    padding: 16px 0;
+  }
+  .admin__content-text {
+    width: 100%;
+  }
+  .admin__content h2 {
+    font-size: 2rem;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .main {
+    padding: 0 2vw;
+  }
+  .admin__content {
+    padding: 12px 4vw;
+  }
+  .admin__content h2 {
+    font-size: 1.3rem;
+  }
+  .admin__content p {
+    font-size: 0.95rem;
+  }
+}
+
 /* --- Admin Table Action Buttons --- */
 .btn-edit,
-.btn-delete {
+.btn-delete,
+.btn-results {
     min-width: 100px;
     min-height: 38px;
     width: 100px;
@@ -1029,6 +1083,14 @@
     background: linear-gradient(90deg, #b71c1c 0%, #c62828 100%);
 }
 
+.btn-results {
+    background: linear-gradient(90deg, #2575fc 0%, #6a82fb 100%);
+    color: #fff;
+}
+.btn-results:hover {
+    background: linear-gradient(90deg, #b71c1c 0%, #c62828 100%);
+}
+
 .btn-add {
     background: linear-gradient(90deg, #2575fc 0%, #6a82fb 100%);
     color: #fff;
@@ -1039,10 +1101,12 @@
     cursor: pointer;
     font-weight: 700;
     font-size: 1.05rem;
-    margin-bottom: 18px;
-    margin-top: 10px;
+    margin-bottom: 0;         /* Remove bottom margin */
+    margin-top: 0;            /* Remove top margin */
     transition: background 0.2s, box-shadow 0.2s;
     box-shadow: 0 2px 8px rgba(37, 117, 252, 0.08);
+    display: flex;
+    align-items: center;
 }
 .btn-add:hover {
     background: linear-gradient(90deg, #1a5ed8 0%, #2575fc 100%);
@@ -1118,12 +1182,12 @@
     border-radius: 12px;
     width: 100%;
     max-width: 700px;
-    margin: 0 auto; /* DODAĆ to, jeśli nie ma */
+    margin: 0 auto;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
     position: relative;
     display: flex;
     flex-direction: column;
-    align-items: center; /* DODAĆ to, by cała zawartość była wyśrodkowana */
+    align-items: center;
 }
 
 .modal-content form {
@@ -1659,4 +1723,130 @@
 }
 .heart-icon:hover {
   filter: brightness(1.2);
+}
+
+.heart-icon {
+  font-size: 1.5em;
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+.heart-icon:hover {
+  filter: brightness(1.2);
+}
+
+.profile-main-container {
+  background: linear-gradient(135deg, #A4AC86 0%, #C2C5AA 100%);
+  min-height: 100vh;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.profile-section {
+  background: linear-gradient(120deg, #eafbe6 0%, #d0e6c9 100%);
+  border-radius: 14px;
+  padding: 32px 24px 24px 24px;
+  margin-bottom: 32px;
+  box-shadow: 0 2px 12px rgba(80,120,80,0.10);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.profile-section h2 {
+  margin-top: 0;
+  color: #4d684e;
+  letter-spacing: 1px;
+}
+
+#profileForm label {
+  display: block;
+  margin-bottom: 18px;
+  font-weight: 500;
+  color: #4d684e;
+}
+
+#profileForm input[type="text"],
+#profileForm input[type="email"],
+#profileForm input[type="password"] {
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 6px;
+  border: 1px solid #b6cdbd;
+  border-radius: 6px;
+  font-size: 1em;
+  background: #f6fbe6;
+  transition: border 0.2s;
+}
+
+#profileForm input:focus {
+  border: 1.5px solid #7cb77c;
+  outline: none;
+}
+
+#profileForm button {
+  margin-right: 12px;
+  margin-top: 10px;
+  padding: 8px 18px;
+  border-radius: 6px;
+  border: none;
+  background: #7cb77c;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#profileForm button:hover {
+  background: #5e9c5e;
+}
+
+#profileForm .btn-delete,
+.btn-delete {
+  background: #e53935;
+  color: #fff;
+}
+
+#profileForm .btn-delete:hover,
+.btn-delete:hover {
+  background: #b71c1c;
+}
+
+.profile-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.profile-section li {
+  background: #f6fbe6;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 4px rgba(80,120,80,0.04);
+}
+
+.profile-section li button {
+  margin-left: 18px;
+  padding: 5px 12px;
+  border-radius: 5px;
+  border: none;
+  background: #e53935;
+  color: #fff;
+  font-size: 0.95em;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.profile-section li button:hover {
+  background: #b71c1c;
+}
+
+@media (max-width: 700px) {
+  .profile-section {
+    padding: 16px 6px;
+    max-width: 98vw;
+  }
 }

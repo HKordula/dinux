@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DINUX Admin</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="icon" type="image/x-icon" href="../assets/images/favicon.ico">
 </head>
 <body>
     <div id="navbar-include"></div>
@@ -17,13 +18,18 @@
                 <p>Manage users, dinosaurs, and votes below.</p>
             </div>
             <div class="admin__btn-group">
-                <button id="loadDinoTable" class="main__btn">Dinos</button>
-                <button id="loadUsersTable" class="main__btn">Users</button>
-                <button id="loadVotesTable" class="main__btn">Votes</button>
+                <button id="loadDinoTable" class="main__btn">
+                    <a>Dinos</a>
+                </button>
+                <button id="loadUsersTable" class="main__btn">
+                    <a>Users</a>
+                </button>
+                <button id="loadVotesTable" class="main__btn">
+                    <a>Votes</a>
+                </button>
             </div>
-</div>
+        </div>
      </div>
-     
      
     <!-- Dino Table Section -->
     <div id="dinoTableContainer" class="dino-table-container">
@@ -52,10 +58,10 @@
             <label>Size: <input type="text" id="modalDinoSize"></label>
             <label>Weight: <input type="text" id="modalDinoWeight"></label>
             <label>Environments:
-                <select id="modalDinoEnvironments" multiple required></select>
+                <select id="modalDinoEnvironments" class="no-scroll-select" multiple required></select>
             </label>
             <label>Categories:
-                <select id="modalDinoCategories" multiple required></select>
+                <select id="modalDinoCategories" class="no-scroll-select" multiple required></select>
             </label>
             <label class="full-width">Image URL: <input type="text" id="modalDinoImageUrl"></label>
             <div class="button-row">
