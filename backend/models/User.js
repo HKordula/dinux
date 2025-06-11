@@ -37,9 +37,9 @@ class User {
     const hashedPassword = await bcrypt.hash(password, 10);
     const [result] = await pool.query(
       `INSERT INTO users 
-       (username, email, password, role, status)
-       VALUES (?, ?, ?, ?, ?)`,
-      [username, email, hashedPassword, constants.ROLES.USER]
+      (username, email, password)
+      VALUES (?, ?, ?)`,
+      [username, email, hashedPassword]
     );
     return result.insertId;
   }
