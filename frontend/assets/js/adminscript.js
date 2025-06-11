@@ -316,9 +316,9 @@ function voteSessionRowRenderer(session) {
     <td>${session.choice2_name || session.choice2_id}</td>
   `;
   const actionsTd = document.createElement('td');
-  actionsTd.appendChild(createButton('Edit', () => showVoteSessionModal(session)));
+  actionsTd.appendChild(createButton('Edit', () => showVoteSessionModal(session), 'btn-edit'));
   actionsTd.appendChild(createButton('Delete', () => deleteVoteSession(session.id), 'btn-delete'));
-  actionsTd.appendChild(createButton('Results', () => showVoteResultsModal(session.id)));
+  actionsTd.appendChild(createButton('Results', () => showVoteResultsModal(session.id), 'btn-results'));
   row.appendChild(actionsTd);
   return row;
 }

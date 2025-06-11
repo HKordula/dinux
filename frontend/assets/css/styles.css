@@ -875,7 +875,6 @@
   background: #582F0E;
 }
 
-
 .admin__container {
     position: relative;
     display: flex;
@@ -907,7 +906,7 @@
 
 .admin__btn-group {
     display: flex;
-    gap: 18px;
+    gap: 20px;
 }
 
 .admin__btn-group .main__btn {
@@ -971,8 +970,10 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 12px;
+    margin-top: 12px;         /* Add this for upper gap */
     width: 100%;
     gap: 16px;
+    min-height: 44px;         /* Ensures consistent height */
 }
 
 .dino-table-title {
@@ -983,6 +984,16 @@
     letter-spacing: 1px;
 }
 
+.no-scroll-select {
+    overflow: hidden !important;
+    height: auto !important;
+    min-height: 2em;
+    max-height: none;
+}
+.no-scroll-select option {
+    white-space: normal;
+}
+
 /* Style for pagination controls in header */
 .dino-table-pagination-top {
     display: flex;
@@ -990,10 +1001,53 @@
     gap: 12px;
 }
 
-/* --- Admin Table Action Buttons --- */
+/* Responsive admin hero section */
+@media screen and (max-width: 900px) {
+  .admin__content {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px 24px;
+    gap: 18px;
+  }
+  .admin__btn-group {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+  }
+  .admin__btn-group .main__btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 48px;
+    font-size: 1.2rem;
+    padding: 16px 0;
+  }
+  .admin__content-text {
+    width: 100%;
+  }
+  .admin__content h2 {
+    font-size: 2rem;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .main {
+    padding: 0 2vw;
+  }
+  .admin__content {
+    padding: 12px 4vw;
+  }
+  .admin__content h2 {
+    font-size: 1.3rem;
+  }
+  .admin__content p {
+    font-size: 0.95rem;
+  }
+}
+
 /* --- Admin Table Action Buttons --- */
 .btn-edit,
-.btn-delete {
+.btn-delete,
+.btn-results {
     min-width: 100px;
     min-height: 38px;
     width: 100px;
@@ -1029,6 +1083,14 @@
     background: linear-gradient(90deg, #b71c1c 0%, #c62828 100%);
 }
 
+.btn-results {
+    background: linear-gradient(90deg, #2575fc 0%, #6a82fb 100%);
+    color: #fff;
+}
+.btn-results:hover {
+    background: linear-gradient(90deg, #b71c1c 0%, #c62828 100%);
+}
+
 .btn-add {
     background: linear-gradient(90deg, #2575fc 0%, #6a82fb 100%);
     color: #fff;
@@ -1039,10 +1101,12 @@
     cursor: pointer;
     font-weight: 700;
     font-size: 1.05rem;
-    margin-bottom: 18px;
-    margin-top: 10px;
+    margin-bottom: 0;         /* Remove bottom margin */
+    margin-top: 0;            /* Remove top margin */
     transition: background 0.2s, box-shadow 0.2s;
     box-shadow: 0 2px 8px rgba(37, 117, 252, 0.08);
+    display: flex;
+    align-items: center;
 }
 .btn-add:hover {
     background: linear-gradient(90deg, #1a5ed8 0%, #2575fc 100%);
@@ -1118,12 +1182,12 @@
     border-radius: 12px;
     width: 100%;
     max-width: 700px;
-    margin: 0 auto; /* DODAĆ to, jeśli nie ma */
+    margin: 0 auto;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
     position: relative;
     display: flex;
     flex-direction: column;
-    align-items: center; /* DODAĆ to, by cała zawartość była wyśrodkowana */
+    align-items: center;
 }
 
 .modal-content form {
