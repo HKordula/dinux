@@ -54,7 +54,7 @@ function setupNavbar() {
     } else { // logged in, show My profile or sth #FIXME
       menu.innerHTML += `
         <li class="navbar__item">
-          <a href="/test1/test1.html" class="navbar__links">My Profile</a>
+          <a href="/my-profile/index.html" class="navbar__links">My Profile</a>
         </li>
       `;
       if (role === 'admin') { // hes an admin, show admin stuff

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Profile | DINUX Park</title>
+  <link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body>
+  <header>
+    <nav id="navbar-include"></nav>
+  </header>
+  <main class="profile-main-container">
+    <section class="profile-section">
+        <h2>My Profile</h2>
+        <form id="profileForm">
+        <label>
+            Username:
+            <input type="text" id="profileUsername" required>
+        </label>
+        <label>
+            Email:
+            <input type="email" id="profileEmail" required>
+        </label>
+        <label>
+            New Password:
+            <input type="password" id="profilePassword" placeholder="Leave blank to keep current">
+        </label>
+        <button type="submit">Update Profile</button>
+        <button type="button" id="deleteAccountBtn" class="btn-delete">Delete Account</button>
+        </form>
+    </section>
+
+    <section class="profile-section">
+        <h2>My Favorites</h2>
+        <ul id="favoritesList"></ul>
+    </section>
+
+    <section class="profile-section">
+        <h2>My Voting History</h2>
+        <ul id="votedSessionsList"></ul>
+    </section>
+    </main>
+  <footer id="footer-include"></footer>
+  <script src="/assets/js/main.js"></script>
+  <script type="module" src="/assets/js/myprofile.js"></script>
+</body>
+</html>

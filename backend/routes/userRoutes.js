@@ -1,6 +1,7 @@
 import express from 'express';
 import { authenticate } from '../middleware/auth.js';
 import {
+  getMe,
   getFavorites,
   addFavorite,
   removeFavorite,
@@ -18,6 +19,7 @@ router.post('/favorites', authenticate, addFavorite);
 router.delete('/favorites/:dinoId', authenticate, removeFavorite);
 
 // User account
+router.get('/users/me', authenticate, getMe);
 router.put('/users/update', authenticate, updateProfile);
 router.delete('/users/delete', authenticate, deleteAccount);
 
