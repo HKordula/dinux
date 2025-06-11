@@ -1475,7 +1475,7 @@
   align-items: center;
   margin-bottom: 0px;
   background: #414833;
-  padding: 0 24px 0 0;
+  padding: 24px 24px 0 0;
 }
 
 #dinoSortSelect {
@@ -1574,6 +1574,14 @@
   background: #936639;
 }
 
+.dino-card-likes {
+  margin-top: 6px;
+  font-size: 1rem;
+  color: #7F4F24;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+}
+
 /* Dino detail subsite */
 .dino-detail {
   max-width: 480px;
@@ -1642,4 +1650,13 @@
   .dino-detail {
     padding: 18px 8px 18px 8px;
   }
+}
+
+.heart-icon {
+  font-size: 1.5em;
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+.heart-icon:hover {
+  filter: brightness(1.2);
 }
