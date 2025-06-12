@@ -95,6 +95,32 @@ async function fetchAllDinos() {
   return dinos || [];
 }
 
+function showErrorNotification(message) {
+  let notif = document.getElementById('dino-notification');
+  if (!notif) {
+    notif = document.createElement('div');
+    notif.id = 'dino-notification';
+    notif.style.position = 'fixed';
+    notif.style.left = '20px';
+    notif.style.bottom = '20px';
+    notif.style.background = '#d32f2f';
+    notif.style.color = '#fff';
+    notif.style.padding = '16px 24px';
+    notif.style.borderRadius = '8px';
+    notif.style.fontSize = '1rem';
+    notif.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
+    notif.style.zIndex = 9999;
+    notif.style.transition = 'opacity 0.3s';
+    notif.style.opacity = '1';
+    document.body.appendChild(notif);
+  }
+  notif.textContent = message;
+  notif.style.opacity = '1';
+  setTimeout(() => {
+    notif.style.opacity = '0';
+  }, 3500);
+}
+
 // --- FAVORITES ---
 async function getUserFavorites() {
   const token = localStorage.getItem('token');
@@ -102,7 +128,6 @@ async function getUserFavorites() {
   try {
     const res = await apiRequest('/api/favorites', 'GET', null, token);
     if (Array.isArray(res.data)) {
-      // /favorites returns full dino objects, so map to IDs
       return res.data.map(d => d.id);
     }
     return [];
@@ -116,7 +141,6 @@ async function addFavorite(dinoId, likesDiv, actionsDiv, dino) {
   try {
     const res = await apiRequest('/api/favorites', 'POST', { dinoId }, token);
     if (res.success) {
-      // Fetch updated dino data to get the correct likes count
       const dinoRes = await apiRequest(`/api/dinos/${dinoId}`);
       const updatedDino = Array.isArray(dinoRes.data) ? dinoRes.data[0] : dinoRes.data;
       const newLikes = updatedDino && typeof updatedDino.likes === 'number'
@@ -140,7 +164,6 @@ async function removeFavorite(dinoId, likesDiv, actionsDiv, dino) {
   try {
     const res = await apiRequest(`/api/favorites/${dinoId}`, 'DELETE', null, token);
     if (res.success) {
-      // Fetch updated dino data to get the correct likes count
       const dinoRes = await apiRequest(`/api/dinos/${dinoId}`);
       const updatedDino = Array.isArray(dinoRes.data) ? dinoRes.data[0] : dinoRes.data;
       const newLikes = updatedDino && typeof updatedDino.likes === 'number'
@@ -327,7 +350,6 @@ function renderDinoCards(dinos, sort = 'default', favorites = []) {
   currentView = 'grid';
   dinoTableContainer.innerHTML = '';
 
-  // Sort dinos based on selected filter
   let sortedDinos = [...dinos];
   if (sort === 'az') {
     sortedDinos.sort((a, b) => a.name.localeCompare(b.name));
@@ -339,7 +361,6 @@ function renderDinoCards(dinos, sort = 'default', favorites = []) {
     sortedDinos.sort((a, b) => (a.likes || 0) - (b.likes || 0));
   }
 
-  // Filter dropdown
   const filterWrapper = document.createElement('div');
   filterWrapper.className = 'dino-filter-wrapper';
 
@@ -362,7 +383,6 @@ function renderDinoCards(dinos, sort = 'default', favorites = []) {
   filterWrapper.appendChild(filterSelect);
   dinoTableContainer.appendChild(filterWrapper);
 
-  // Cards grid
 const grid = document.createElement('div');
   grid.className = 'dino-card-grid';
   sortedDinos.forEach(dino => {
@@ -382,22 +402,38 @@ card.innerHTML = `
     let currentLikes = dino.likes || 0;
     let liked = isFavorite;
 
-    heart.onclick = async (e) => {
-      e.stopPropagation();
-      if (liked) {
-        await removeFavorite(dino.id, likesDiv, null, {...dino, likes: currentLikes});
-        liked = false;
-        currentLikes = Math.max(currentLikes - 1, 0);
-        heart.textContent = '🩶';
-        likesDiv.querySelector('.likes-count').textContent = currentLikes;
-      } else {
-        await addFavorite(dino.id, likesDiv, null, {...dino, likes: currentLikes});
-        liked = true;
-        currentLikes = currentLikes + 1;
-        heart.textContent = '❤️';
-        likesDiv.querySelector('.likes-count').textContent = currentLikes;
-      }
-    };
+const token = localStorage.getItem('token');
+const role = localStorage.getItem('role');
+
+if (!token || (role !== 'admin' && role !== 'user')) {
+  heart.onclick = (e) => {
+    e.stopPropagation();
+    showErrorNotification('You must be logged in as a user to like dinosaurs.');
+  };
+  heart.style.color = '#aaa';
+  heart.style.cursor = 'not-allowed';
+} else {
+  heart.onclick = async (e) => {
+    e.stopPropagation();
+    if (liked) {
+      await removeFavorite(dino.id, likesDiv, null, {...dino, likes: currentLikes});
+      liked = false;
+      currentLikes = Math.max(currentLikes - 1, 0);
+      heart.textContent = '🩶';
+      likesDiv.querySelector('.likes-count').textContent = currentLikes;
+      if (likesDiv.querySelector('.likes-count').nextSibling)
+        likesDiv.querySelector('.likes-count').nextSibling.textContent = ' ' + pluralizeLikes(currentLikes);
+    } else {
+      await addFavorite(dino.id, likesDiv, null, {...dino, likes: currentLikes});
+      liked = true;
+      currentLikes = currentLikes + 1;
+      heart.textContent = '❤️';
+      likesDiv.querySelector('.likes-count').textContent = currentLikes;
+      if (likesDiv.querySelector('.likes-count').nextSibling)
+        likesDiv.querySelector('.likes-count').nextSibling.textContent = ' ' + pluralizeLikes(currentLikes);
+    }
+  };
+}
 
     card.onclick = (e) => {
       if (e.target.classList.contains('heart-icon')) return;
@@ -409,7 +445,6 @@ card.innerHTML = `
   dinoTableContainer.appendChild(grid);
 }
 
-// Show detail view for a specific dino (subsite)
 async function showDinoDetail(dino) {
   currentView = 'detail';
   const token = localStorage.getItem('token');
@@ -448,7 +483,6 @@ async function showDinoDetail(dino) {
   let currentLikes = dino.likes || 0;
   let liked = isFavorite;
 
-  // Only allow like/unlike for logged-in users (admin/user)
   if (token && (role === 'admin' || role === 'user')) {
     heart.onclick = async () => {
       if (liked) {
@@ -466,13 +500,14 @@ async function showDinoDetail(dino) {
       }
     };
   } else {
-    // For guests, make heart not clickable and gray
-    heart.style.pointerEvents = 'none';
+    heart.onclick = () => {
+    showErrorNotification('You must be logged in as a user to like dinosaurs.');
+    };
     heart.style.color = '#aaa';
-    heart.title = 'Zaloguj się, aby polubić';
+    heart.style.cursor = 'not-allowed';
+    heart.title = 'You must be logged in as a user to like dinosaurs.';
   }
 
-  // Admin edit button
   if (role === 'admin') {
     const actionsDiv = document.getElementById('detail-actions');
     const editBtn = createButton('Edit', () => showDinoModal(dino));
@@ -497,7 +532,6 @@ async function handleRoute() {
   const match = path.match(/^\/dinodex\/(\d+)$/);
   if (match) {
     const id = Number(match[1]);
-    // Try to use cached data first
     if (allDinosCache) {
       const dino = allDinosCache.find(d => d.id === id);
       if (dino) {
@@ -505,7 +539,6 @@ async function handleRoute() {
         return;
       }
     }
-    // Fallback: fetch from API
     try {
       const result = await apiRequest(`/api/dinos/${id}`);
       let dino = result && result.data;
@@ -519,7 +552,6 @@ async function handleRoute() {
       dinoTableContainer.innerHTML = '<p>Nie znaleziono dinozaura.</p>';
     }
   } else {
-    // Grid view
     const dinos = (await apiRequest('/api/dinos')).data;
     const favorites = await getUserFavorites();
     renderDinoCards(dinos, 'default', favorites);
@@ -544,5 +576,4 @@ document.getElementById('loadDinoTable').addEventListener('click', () => {
   handleRoute();
 });
 
-// Initial load
 handleRoute();
