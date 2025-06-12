@@ -277,8 +277,8 @@ async function fetchAndDisplayUsersTable() {
       ['ID', 'Username', 'Email', 'Role', 'Status', 'Created At', 'Actions'],
       users,
       userRowRenderer,
-      'Add user',           // <-- Button text
-      showUserAddModal,     // <-- Button handler (implement this function to show your add user modal)
+      'Add user',
+      showUserAddModal,  
     );
   } catch (error) {
     handleError('Failed to load users.', error);
@@ -291,7 +291,6 @@ function showUserAddModal() {
   m.form.reset();
   m.id.value = '';
   m.role.value = 'user';
-  // Set status select value to default (e.g. 'activated')
   const statusSelect = document.getElementById('editUserStatus');
   if (statusSelect) {
     statusSelect.value = 'activated';
@@ -299,7 +298,7 @@ function showUserAddModal() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const username = localStorage.getItem('username'); // or get from your auth system
+  const username = localStorage.getItem('username');
   if (username) {
     document.getElementById('admin-username').textContent = username;
   }
@@ -418,19 +417,17 @@ async function deleteDino(id) {
 }
 
 // --- MODAL LOGIC (user) ---
-// ...existing code...
 function showUserEditForm(user) {
   const m = modals.user;
   m.modal.style.display = 'block';
   m.id.value = user.id;
   m.role.value = user.role;
-  // Set status select value
   const statusSelect = document.getElementById('editUserStatus');
   if (statusSelect) {
     statusSelect.value = user.status || 'activated';
   }
 }
-// ...existing code...
+
 modals.user.form.addEventListener('submit', async function(e) {
   e.preventDefault();
   const userId = modals.user.id.value;
@@ -439,7 +436,6 @@ modals.user.form.addEventListener('submit', async function(e) {
   await updateUserRoleAndStatus(userId, newRole, newStatus);
   hideUserEditModal();
 });
-// ...existing code...
 
 async function updateUserRoleAndStatus(userId, newRole, newStatus) {
   const token = localStorage.getItem('token');

@@ -532,7 +532,6 @@
 }
 
 /* Social Icons */
-
 .social__icon--link {
     color: #fff;
     font-size: 24px;
@@ -875,6 +874,7 @@
   background: #582F0E;
 }
 
+/* Admin Section CSS */
 .admin__container {
     position: relative;
     display: flex;
@@ -970,10 +970,10 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 12px;
-    margin-top: 12px;         /* Add this for upper gap */
+    margin-top: 12px;
     width: 100%;
     gap: 16px;
-    min-height: 44px;         /* Ensures consistent height */
+    min-height: 44px;
 }
 
 .dino-table-title {
@@ -994,7 +994,6 @@
     white-space: normal;
 }
 
-/* Style for pagination controls in header */
 .dino-table-pagination-top {
     display: flex;
     align-items: center;
@@ -1088,7 +1087,7 @@
     color: #fff;
 }
 .btn-results:hover {
-    background: linear-gradient(90deg, #b71c1c 0%, #c62828 100%);
+    background: linear-gradient(90deg, #1a5ed8 0%, #2575fc 100%);
 }
 
 .btn-add {
@@ -1101,8 +1100,8 @@
     cursor: pointer;
     font-weight: 700;
     font-size: 1.05rem;
-    margin-bottom: 0;         /* Remove bottom margin */
-    margin-top: 0;            /* Remove top margin */
+    margin-bottom: 0;
+    margin-top: 0;
     transition: background 0.2s, box-shadow 0.2s;
     box-shadow: 0 2px 8px rgba(37, 117, 252, 0.08);
     display: flex;
@@ -1150,7 +1149,6 @@
     margin-right: 0;
 }
 
-/* Table Containers */
 .dino-table-container {
     margin: 40px auto;
     padding: 20px;
@@ -1275,19 +1273,16 @@
     gap: 6px;                 
 }
 
-/* Pełna szerokość dla dużych pól */
 .modal-content form textarea,
 .modal-content form .full-width {
     grid-column: 1 / 3;
 }
 
-/* Obrazek podglądu też na 2 kolumny */
 .modal-content #modalDinoImagePreview {
     grid-column: 1 / 3;
     margin-top: 10px;
 }
 
-/* Przycisk wiersz poniżej */
 .modal-content form button[type="submit"],
 .modal-content form button[type="button"] {
     margin-top: 10px;
@@ -1309,7 +1304,6 @@
     gap: 10px;
 }
 
-
 /* Image Preview */
 #modalDinoImagePreview {
     border-radius: 8px;
@@ -1326,7 +1320,7 @@
 .contact__container {
   max-width: 700px;
   margin: 0 auto;
-  background: #e9edc9; /* soft greenish-beige */
+  background: #e9edc9;
   border-radius: 16px;
   box-shadow: 0 4px 24px rgba(65, 72, 51, 0.10);
   padding: 36px 28px;
@@ -1394,8 +1388,6 @@
 .contact__content button:hover {
   background: #414833;
 }
-
-
 
 /* about stuff */
 .about {
@@ -1510,7 +1502,6 @@
   }
 }
 
-/* Opcjonalnie: tabela przewijana poziomo na bardzo małych ekranach */
 .dino-table-container {
   overflow-x: auto;
 }
