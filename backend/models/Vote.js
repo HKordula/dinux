@@ -43,21 +43,30 @@ class Vote {
   }
 
   static async getSessionResults(sessionId) {
-    const [results] = await pool.query(
-      `SELECT 
-        d.id,
-        d.name,
-        COUNT(v.id) AS vote_count,
-        RANK() OVER (ORDER BY COUNT(v.id) DESC) AS ranking
-       FROM votes v
-       JOIN dinosaurs d ON v.dinosaur_id = d.id
-       WHERE v.vote_session_id = ?
-       GROUP BY d.id
-       ORDER BY vote_count DESC`,
+    const [[session]] = await pool.query(
+      'SELECT choice1_id, choice2_id FROM vote_sessions WHERE id = ?',
       [sessionId]
     );
-    
-    return results;
+    if (!session) return [];
+
+    const [dinos] = await pool.query(
+      'SELECT id, name FROM dinosaurs WHERE id IN (?, ?)',
+      [session.choice1_id, session.choice2_id]
+    );
+
+    const [votes] = await pool.query(
+      `SELECT dinosaur_id, COUNT(*) AS vote_count
+      FROM votes
+      WHERE vote_session_id = ?
+      GROUP BY dinosaur_id`,
+      [sessionId]
+    );
+
+    return dinos.map(dino => ({
+      dinosaur_id: Number(dino.id),
+      name: dino.name,
+      vote_count: Number(votes.find(v => Number(v.dinosaur_id) === Number(dino.id))?.vote_count || 0)
+    }));
   }
 
   static async getUserVotes(userId) {

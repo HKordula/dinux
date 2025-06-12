@@ -46,7 +46,6 @@ router.put('/species/:id', authenticate, authorize('admin'), updateSpecies);
 router.delete('/species/:id', authenticate, authorize('admin'), deleteSpecies);
 
 // Vote session
-router.get('/vote/:id/results', authenticate, authorize('admin'), getVoteResults);
 router.post('/vote', authenticate, authorize('admin'), createVoteSession);
 router.put('/vote/:id', authenticate, authorize('admin'), updateVoteSession);
 router.delete('/vote/:id', authenticate, authorize('admin'), deleteVoteSession);

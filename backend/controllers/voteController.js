@@ -3,11 +3,11 @@ import asyncHandler from '../utils/asyncHandler.js';
 
 const castVote = asyncHandler(async (req, res) => {
   const userId = req.user.id;
-  const dinosaurId = req.params.dinoId;
-  const { sessionId } = req.body;
+  const sessionId = req.params.sessionId;
+  const { dinosaurId } = req.body;
 
-  if (!sessionId) {
-    return res.status(400).json({ success: false, error: 'Missing vote session ID' });
+  if (!sessionId || !dinosaurId) {
+    return res.status(400).json({ success: false, error: 'Missing vote session ID or dinosaur ID' });
   }
 
   const voteId = await Vote.castVote(userId, dinosaurId, sessionId);

@@ -355,25 +355,41 @@
     }
 }
 
-/* Services Section CSS */
+.services__container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 32px;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.services__card h2,
+.services__card p {
+    color: #fff;
+    text-shadow: 0 1px 4px #333D2940;
+}
+
 .services {
     padding-top: 5vh;
     background: #414833;
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
 }
 
 .services h1 {
     background-color: #A4AC86;
     background-image: linear-gradient(
         to right,
-    #C2C5AA 0%,
-    #B6AD90 2%,
-    #A68A64 21%,
-    #936639 92%,
-    #7F4F24 100%
+        #C2C5AA 0%,
+        #B6AD90 2%,
+        #A68A64 21%,
+        #936639 92%,
+        #7F4F24 100%
     );
     background-size: 100%;
     margin-bottom: 5rem;
@@ -382,93 +398,157 @@
     -moz-background-clip: text;
     -webkit-text-fill-color: transparent;
     -moz-text-fill-color: transparent;
+    text-align: center;
 }
 
-.services__container {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
+.services__card-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 32px 30px 30px 30px;
+    background: linear-gradient(to top, rgba(17,17,17,0.7) 70%, rgba(17,17,17,0.1) 100%);
+    border-radius: 0 0 8px 8px;
+    z-index: 2;
 }
 
 .services__card {
-    margin: 1rem;
-    height: 500px;
-    width: 600px;
-    border-radius: 4px;
-    background-image: linear-gradient(
-        to bottom, 
-        rgba(0, 0, 0, 0) 0%,
-        rgba(17,17,17,0.6) 100%
-    ),
-    url('../images/majestic-tyrannosaurus-rex-roaming-jungle-ai_431161-3070.avif');
-    background-size: cover;
+    background: linear-gradient(135deg, #eafbe6 0%, #d0e6c9 100%);
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(65, 72, 51, 0.13);
+    padding: 32px 28px 28px 28px;
+    margin: 1rem 0;
+    min-width: 340px;
+    max-width: 400px;
+    flex: 1 1 340px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     position: relative;
-    color: #fff;
-}
-
-.services__card:nth-child(2){
-    background-image: linear-gradient(
-        to bottom, 
-        rgba(0, 0, 0, 0) 0%,
-        rgba(17,17,17,0.6) 100%
-    ),
-    url('../images/dc541a4ae093c084af90e83775e2e5df.jpg');
-}
-
-.services h2 {
-    position: absolute;
-    top: 350px;
-    left: 30px;
-}
-
-.services__card p {
-    position: absolute;
-    top: 400px;
-    left: 30px;
-}
-
-.services__card button {
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    outline: none;
-    border-radius: 4px;
-    background: #7F4F24;
-    position: absolute;
-    top: 440px;
-    left: 30px;
-    font-size: 1rem;
-    cursor: pointer;
+    color: #333D29;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .services__card:hover {
-    transform: scale(1.075);
-    transition: 0.2s ease-in;
+    transform: scale(1.04);
+    box-shadow: 0 8px 32px rgba(65, 72, 51, 0.18);
+}
+
+.dino-thumbnails {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 18px;
+    justify-content: center;
+    width: 100%;
+}
+
+.dino-thumbnails img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid #7F4F24;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(80,120,80,0.08);
+}
+
+.vote-dino-names {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.vote-dino-name {
+    font-weight: bold;
+    color: #A4AC86;
+    font-size: 1.1em;
+    text-shadow: 0 1px 4px #333D2940;
+}
+
+.vote-counts {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.vote-count {
+    color: #388e3c;
+    font-weight: 600;
+}
+
+.vote-btns {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 10px;
+    justify-content: center;
+    width: 100%;
+}
+
+.vote-btn {
+    background: #7F4F24;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 18px;
+    font-size: 1rem;
     cursor: pointer;
+    transition: background 0.2s;
+}
+
+.vote-btn:hover {
+    background: #936639;
+}
+
+.voted-label {
+    color: #fff !important;
+    font-weight: bold;
+    margin-top: 10px;
+    text-align: center;
+    width: 100%;
+    text-shadow: 0 1px 4px #333D2940;
+}
+
+.login-prompt {
+    margin-top: 18px;
+    color: #b71c1c;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
 }
 
 @media screen and (max-width: 960px) {
-   .services {
-    height: 1600px;
-   } 
-
-   .services h1 {
-    font-size: 2rem;
-    margin-top: 12rem;
-   }
+    .services {
+        min-height: 1600px;
+    }
+    .services h1 {
+        font-size: 2rem;
+        margin-top: 12rem;
+    }
+    .services__card {
+        width: 95vw;
+        min-width: 0;
+        height: 400px;
+    }
 }
-
 @media screen and (max-width: 480px) {
     .services {
-        height: 1400px;
+        min-height: 1400px;
     }
-   
     .services h1 {
         font-size: 1.2rem;
     }
-
     .services__card {
-        width: 300px;
+        width: 98vw;
+        min-width: 0;
+        height: 340px;
+        padding: 0;
+    }
+    .services__card-content {
+        padding: 18px 10px 16px 10px;
     }
 }
 

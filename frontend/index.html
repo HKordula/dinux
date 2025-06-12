@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DINUX Website</title>
     <link rel="stylesheet" href="assets/css/styles.css">
-    <link rel="icon" type="image/x-icon" href="../assets/images/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico">
 </head>
 <body>
     <div id="navbar-include"></div>
@@ -27,24 +27,15 @@
           </div>
      </div>
 
-     <!-- Services Section -->
-     <div class="services">
-        <h1>Read more and become an expert </h1>
-        <div class="services__container">
-            <div class="services__card">
-                <h2>Most popular dinos</h2>
-                <p>T-rex, sinosaurus and much more...</p>
-                <button>Read more</button>
-            </div>
-            <div class="services__card">
-                <h2>Most dangerous</h2>
-                <p>Carnivores, gigantic creatures...</p>
-                <button>Read more</button>
-            </div>
+     <!-- votes section -->
+    <div class="services">
+        <h1>Recent Voting Sessions</h1>
+        <div class="services__container" id="recentVotesContainer">
         </div>
-     </div>
-
+    </div>
+    
     <div id="footer-include"></div>
     <script src="/assets/js/main.js"></script>
+    <script type="module" src="/assets/js/votescript.js"></script>
 </body>
 </html>

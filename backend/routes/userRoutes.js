@@ -9,7 +9,7 @@ import {
   deleteAccount,
   getMyVotedSessions
 } from '../controllers/userController.js';
-import { castVote, getVoteResults } from '../controllers/voteController.js';
+import { castVote } from '../controllers/voteController.js';
 
 const router = express.Router();
 
@@ -24,8 +24,7 @@ router.put('/users/update', authenticate, updateProfile);
 router.delete('/users/delete', authenticate, deleteAccount);
 
 // Voting
-router.post('/vote/:dinoId', authenticate, castVote);
-router.get('/vote/:sessionId', authenticate, getVoteResults);
+router.post('/vote/:sessionId', authenticate, castVote);
 router.get('/vote/sessions/mine', authenticate, getMyVotedSessions);
 
 export default router;

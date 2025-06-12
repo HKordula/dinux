@@ -325,7 +325,7 @@ function voteSessionRowRenderer(session) {
 async function fetchAndDisplayVoteSessionsTable() {
   try {
     const token = localStorage.getItem('token');
-    const sessions = (await apiRequest('/api/admin/vote', 'GET', null, token)).data;
+    const sessions = (await apiRequest('/api/vote', 'GET', null, token)).data;
     renderTable(
       ['ID', 'Title', 'Description', 'Dinosaur 1', 'Dinosaur 2', 'Actions'],
       sessions,
@@ -517,7 +517,7 @@ modals.voteResults.close.onclick = hideVoteResultsModal;
 async function fetchVoteResults(sessionId) {
   try {
     const token = localStorage.getItem('token');
-    const res = await apiRequest(`/api/admin/vote/${sessionId}/results`, 'GET', null, token);
+    const res = await apiRequest(`/api//vote/${sessionId}`, 'GET', null, token);
     const results = res.data.results || [];
     if (!results.length) {
       modals.voteResults.content.innerHTML = '<p>No votes in this session.</p>';

@@ -4,6 +4,10 @@ import {
   getAllSpecies,
   getSpeciesById
 } from '../controllers/speciesController.js';
+import {
+  getAllVoteSessions,
+  getVoteResults
+} from '../controllers/voteController.js';
 
 const router = express.Router();
 
@@ -14,5 +18,8 @@ router.get('/species', getAllSpecies);
 router.get('/species/:id', getSpeciesById);
 
 router.get('/tierlist', getTierList);
+
+router.get('/vote', getAllVoteSessions);
+router.get('/vote/:sessionId', getVoteResults);
 
 export default router;
