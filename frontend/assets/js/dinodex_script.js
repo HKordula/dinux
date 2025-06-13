@@ -268,7 +268,7 @@ function showDinoModal(dino = null) {
   fetchMetadata().then(() => {
     const m = modals.dino;
     m.modal.style.display = 'block';
-    m.title.textContent = dino ? 'Edytuj dinozaura' : 'Dodaj dinozaura';
+    m.title.textContent = dino && dino.id ? 'Edit dinosaur' : 'Add dinosaur';
     m.form.reset();
     m.id.value = dino?.id || '';
     m.name.value = dino?.name || '';

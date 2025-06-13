@@ -30,39 +30,38 @@
 
     <!-- Dino -->
     <div id="dinoModal" class="modal" style="display:none;">
-    <div class="modal-content">
-        <span class="close" id="closeDinoModal">&times;</span>
-        <h3 id="modalFormTitle">Dodaj dinozaura</h3>
-        <form id="dinoModalForm">
-        <input type="hidden" id="modalDinoId">
+        <div class="modal-content">
+            <span class="close" id="closeDinoModal">&times;</span>
+            <h3 id="modalFormTitle">Add dinosaur</h3>
+            <form id="dinoModalForm">
+                <input type="hidden" id="modalDinoId">
 
-        <label>Name: <input type="text" id="modalDinoName" required></label><br>
-        <label>Description: <textarea id="modalDinoDescription" required></textarea></label><br>
-        <label>Species:
-            <select id="modalDinoSpeciesId" required></select>
-        </label><br>
-        <label>Era:
-            <select id="modalDinoEraId" required></select>
-        </label><br>
-        <label>Diet:
-            <select id="modalDinoDietId" required></select>
-        </label><br>
-        <label>Size: <input type="text" id="modalDinoSize"></label><br>
-        <label>Weight: <input type="text" id="modalDinoWeight"></label><br>
-        <label>Environments:
-            <select id="modalDinoEnvironments" multiple required></select>
-        </label><br>
-        <label>Categories:
-            <select id="modalDinoCategories" multiple required></select>
-        </label><br>
-        <label>Image URL: <input type="text" id="modalDinoImageUrl"></label><br>
-        <div style="margin:10px 0;">
-            <img id="modalDinoImagePreview" src="" alt="Preview" style="max-width:120px;max-height:90px;display:none;border:1px solid #ccc;">
+                <label>Name: <input type="text" id="modalDinoName" required></label>
+                <label>Species:
+                    <select id="modalDinoSpeciesId" required></select>
+                </label>
+                <label class="full-width">Description: <textarea id="modalDinoDescription" required class="full-width"></textarea></label>
+                <label>Era:
+                    <select id="modalDinoEraId" required></select>
+                </label>
+                <label>Diet:
+                    <select id="modalDinoDietId" required></select>
+                </label>
+                <label>Size: <input type="text" id="modalDinoSize"></label>
+                <label>Weight: <input type="text" id="modalDinoWeight"></label>
+                <label>Environments:
+                    <select id="modalDinoEnvironments" class="no-scroll-select" multiple required></select>
+                </label>
+                <label>Categories:
+                    <select id="modalDinoCategories" class="no-scroll-select" multiple required></select>
+                </label>
+                <label class="full-width">Image URL: <input type="text" id="modalDinoImageUrl"></label>
+                <div class="button-row">
+                    <button type="submit">Save</button>
+                    <button type="button" id="cancelDinoModal">Cancel</button>
+                </div>
+            </form>
         </div>
-        <button type="submit">Zapisz</button>
-        <button type="button" id="cancelDinoModal">Anuluj</button>
-        </form>
-    </div>
     </div>
 
 

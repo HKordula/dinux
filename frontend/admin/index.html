@@ -114,11 +114,11 @@
     <div id="userEditModal" class="modal" style="display:none;">
         <div class="modal-content">
             <span class="close" id="closeUserEditModal">&times;</span>
-            <h3>Edytuj rolę użytkownika</h3>
+            <h3>Edit User Role</h3>
             <form id="userEditForm">
             <input type="hidden" id="editUserId">
             <label>
-                Rola:
+                Role:
                 <select id="editUserRole" required>
                 <option value="user">user</option>
                 <option value="admin">admin</option>
@@ -131,9 +131,9 @@
                     <option value="blocked">blocked</option>
                 </select>
             </label>
-            <div style="margin-top:16px;">
-                <button type="submit">Zapisz</button>
-                <button type="button" id="cancelUserEditModal">Anuluj</button>
+            <div class="button-row">
+                <button type="submit">Save</button>
+                <button type="button" id="cancelUserEditModal">Cancel</button>
             </div>
             </form>
         </div>
