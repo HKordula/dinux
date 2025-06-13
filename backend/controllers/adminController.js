@@ -3,6 +3,7 @@ import Dinosaur from '../models/Dinosaur.js';
 import asyncHandler from '../utils/asyncHandler.js';
 import bcrypt from 'bcrypt';
 import pool from '../config/db.js';
+import constants from '../config/constants.js';
 
 const manageUsers = asyncHandler(async (req, res) => {
   let users = [];
@@ -19,7 +20,7 @@ const manageUsers = asyncHandler(async (req, res) => {
 });
 
 const createUser = asyncHandler(async (req, res) => {
-  const { username, email, password, role = 'user', status = 'activated' } = req.body;
+  const { username, email, password, role = constants.ROLES.USER, status = constants.USER_STATUS.ACTIVATED } = req.body;
   if (!username || !email || !password) {
     return res.status(400).json({ success: false, error: 'Missing required fields' });
   }
@@ -30,7 +31,7 @@ const createUser = asyncHandler(async (req, res) => {
   const id = await User.create({ username, email, password, role, status });
 
   try {
-    if (req.user && req.user.role === 'admin') {
+    if (req.user && req.user.role === constants.ROLES.ADMIN) {
       await pool.query(
         'INSERT INTO admin_logs (admin_id, action, details) VALUES (?, ?, ?)',
         [req.user.id, 'CREATE_USER', `Created user id=${id}, username=${username}, email=${email}, role=${role}, status=${status}`]
@@ -47,11 +48,11 @@ const deleteUser = async (req, res, next) => {
   try {
     const affectedRows = await User.delete(req.params.id);
     if (affectedRows === 0) {
-      return res.status(404).json({ success: false, error: 'User not found' });
+      return res.status(404).json({ success: false, error: constants.ERROR_MESSAGES.NOT_FOUND });
     }
 
     try {
-      if (req.user && req.user.role === 'admin') {
+      if (req.user && req.user.role === constants.ROLES.ADMIN) {
         await pool.query(
           'INSERT INTO admin_logs (admin_id, action, details) VALUES (?, ?, ?)',
           [req.user.id, 'DELETE_USER', `Deleted user id=${req.params.id}`]
@@ -76,7 +77,7 @@ const updateUserStatus = async (req, res, next) => {
 
     const affectedRows = await User.updateRoleAndStatus(userId, role, status);
     if (affectedRows === 0) {
-      return res.status(404).json({ success: false, error: 'User not found' });
+      return res.status(404).json({ success: false, error: constants.ERROR_MESSAGES.NOT_FOUND });
     }
 
     let changes = [];
@@ -91,7 +92,7 @@ const updateUserStatus = async (req, res, next) => {
     const details = `Updated user id=${userId}. Changes: ${changes.join(', ')}`;
 
     try {
-      if (req.user && req.user.role === 'admin') {
+      if (req.user && req.user.role === constants.ROLES.ADMIN) {
         await pool.query(
           'INSERT INTO admin_logs (admin_id, action, details) VALUES (?, ?, ?)',
           [req.user.id, 'UPDATE_USER', details]
@@ -124,7 +125,7 @@ const resetUserPassword = asyncHandler(async (req, res) => {
 
   const affectedRows = await User.update(id, { password: hashedPassword });
   if (affectedRows === 0) {
-    return res.status(404).json({ success: false, error: 'User not found' });
+    return res.status(404).json({ success: false, error: constants.ERROR_MESSAGES.NOT_FOUND });
   }
 
   res.json({

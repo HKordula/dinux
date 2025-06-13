@@ -23,7 +23,7 @@ const getVoteResults = asyncHandler(async (req, res) => {
 
   const session = await Vote.getSessionById(sessionId);
   if (!session) {
-    return res.status(404).json({ success: false, error: 'Vote session not found' });
+    return res.status(404).json({ success: false, error: constants.ERROR_MESSAGES.NOT_FOUND });
   }
 
   const results = await Vote.getSessionResults(sessionId);
@@ -45,7 +45,7 @@ const createVoteSession = asyncHandler(async (req, res) => {
   const [result] = await Vote.createSession(title, description, choice1_id, choice2_id);
 
   try {
-    if (req.user && req.user.role === 'admin') {
+    if (req.user && req.user.role === constants.ROLES.ADMIN) {
       await pool.query(
         'INSERT INTO admin_logs (admin_id, action, details) VALUES (?, ?, ?)',
         [req.user.id, 'CREATE_VOTE_SESSION', `Created vote session id=${result.insertId}, title=${title}`]
@@ -66,7 +66,7 @@ const updateVoteSession = asyncHandler(async (req, res) => {
 
   const affectedRows = await Vote.updateSession(id, { title, description, choice1_id, choice2_id });
   if (affectedRows === 0) {
-    return res.status(404).json({ success: false, error: 'Vote session not found' });
+    return res.status(404).json({ success: false, error: constants.ERROR_MESSAGES.NOT_FOUND });
   }
 
   let changes = [];
@@ -87,7 +87,7 @@ const updateVoteSession = asyncHandler(async (req, res) => {
   const details = `Updated vote session id=${id}. Changes: ${changes.join(', ')}`;
 
   try {
-    if (req.user && req.user.role === 'admin') {
+    if (req.user && req.user.role === constants.ROLES.ADMIN) {
       await pool.query(
         'INSERT INTO admin_logs (admin_id, action, details) VALUES (?, ?, ?)',
         [req.user.id, 'UPDATE_VOTE_SESSION', details]
@@ -104,11 +104,11 @@ const deleteVoteSession = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const affectedRows = await Vote.deleteSession(id);
   if (affectedRows === 0) {
-    return res.status(404).json({ success: false, error: 'Vote session not found' });
+    return res.status(404).json({ success: false, error: constants.ERROR_MESSAGES.NOT_FOUND });
   }
 
   try {
-    if (req.user && req.user.role === 'admin') {
+    if (req.user && req.user.role === constants.ROLES.ADMIN) {
       await pool.query(
         'INSERT INTO admin_logs (admin_id, action, details) VALUES (?, ?, ?)',
         [req.user.id, 'DELETE_VOTE_SESSION', `Deleted vote session id=${id}`]

@@ -9,7 +9,7 @@ const getAllSpecies = asyncHandler(async (req, res) => {
 const getSpeciesById = asyncHandler(async (req, res) => {
   const species = await Species.findById(req.params.id);
   if (!species) {
-    return res.status(404).json({ success: false, error: 'Species not found' });
+    return res.status(404).json({ success: false, error: constants.ERROR_MESSAGES.NOT_FOUND });
   }
   res.json({ success: true, data: species });
 });
@@ -30,7 +30,7 @@ const updateSpecies = asyncHandler(async (req, res) => {
   }
   const affectedRows = await Species.update(req.params.id, { name, description });
   if (affectedRows === 0) {
-    return res.status(404).json({ success: false, error: 'Species not found' });
+    return res.status(404).json({ success: false, error: constants.ERROR_MESSAGES.NOT_FOUND });
   }
   res.json({ success: true, message: 'Species updated' });
 });
@@ -38,7 +38,7 @@ const updateSpecies = asyncHandler(async (req, res) => {
 const deleteSpecies = asyncHandler(async (req, res) => {
   const affectedRows = await Species.delete(req.params.id);
   if (affectedRows === 0) {
-    return res.status(404).json({ success: false, error: 'Species not found' });
+    return res.status(404).json({ success: false, error: constants.ERROR_MESSAGES.NOT_FOUND });
   }
   res.json({ success: true, message: 'Species deleted' });
 });

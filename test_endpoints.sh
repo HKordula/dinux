@@ -163,9 +163,9 @@ test_positive "GET" "/vote/1?sessionId=1" "GET /vote/1" "$USER_TOKEN"
 
 # --- VOTE SESSIONS MINE TESTS ---
 test_positive "GET" "/vote/sessions/mine" "GET /vote/sessions/mine (empty)" "$USER_TOKEN"
-test_positive "POST" "/vote/1" "POST /vote/1" "$USER_TOKEN" '{"sessionId":1}'
+test_positive "POST" "/vote/1" "POST /vote/1" "$USER_TOKEN" '{"dinosaurId":1}'
 test_positive "GET" "/vote/sessions/mine" "GET /vote/sessions/mine (after voting)" "$USER_TOKEN"
-test_negative "POST" "/vote/1" "POST /vote/1 (duplicate vote)" "$USER_TOKEN" '{"sessionId":1}'
+test_negative "POST" "/vote/1" "POST /vote/1 (duplicate vote)" "$USER_TOKEN" '{"dinosaurId":1}'
 
 # Admin dino CRUD
 NEW_DINO=$(api_call "POST" "/admin/dinos" "$ADMIN_TOKEN" '{"name":"APITestDino","species_id":1,"description":"Test dino","era_id":1,"diet_id":1,"size":"5m","weight":"500kg","image_url":"apitest.jpg","categories":[1],"environments":[1]}')

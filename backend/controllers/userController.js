@@ -7,7 +7,7 @@ import asyncHandler from '../utils/asyncHandler.js';
 const getMe = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user.id);
   if (!user) {
-    return res.status(404).json({ success: false, error: 'User not found' });
+    return res.status(404).json({ success: false, error: constants.ERROR_MESSAGES.NOT_FOUND });
   }
 
   // lets not send password :3
@@ -31,7 +31,7 @@ const addFavorite = async (req, res, next) => {
 
     const dino = await Dinosaur.findById(dinoId);
     if (!dino) {
-      return res.status(404).json({ success: false, error: 'Dinosaur not found' });
+      return res.status(404).json({ success: false, error: constants.ERROR_MESSAGES.NOT_FOUND });
     }
 
     await Favorite.addFavorite(userId, dinoId);
@@ -46,7 +46,7 @@ const removeFavorite = asyncHandler(async (req, res) => {
   if (affectedRows === 0) {
     return res.status(404).json({
       success: false,
-      error: 'Favorite not found'
+      error: constants.ERROR_MESSAGES.NOT_FOUND
     });
   }
   res.json({
@@ -61,7 +61,7 @@ const updateProfile = async (req, res, next) => {
     const { username, email, password } = req.body;
 
     const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ success: false, error: 'User not found' });
+    if (!user) return res.status(404).json({ success: false, error: constants.ERROR_MESSAGES.NOT_FOUND });
 
     const newUsername = username || user.username;
     const newEmail = email || user.email;

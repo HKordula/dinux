@@ -31,7 +31,7 @@ class User {
     return rows[0];
   }
 
-  static async create({ username, email, password, role = 'user', status = 'activated' }) {
+  static async create({ username, email, password, role = constants.ROLES.USER, status = constants.USER_STATUS.ACTIVATED }) {
   const hashedPassword = await bcrypt.hash(password, 10);
   const [result] = await pool.query(
     `INSERT INTO users 

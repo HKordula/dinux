@@ -26,7 +26,7 @@ const getDinosaurById = asyncHandler(async (req, res) => {
   if (!dinosaur) {
     return res.status(404).json({
       success: false,
-      error: 'Dinosaur not found'
+      error: constants.ERROR_MESSAGES.NOT_FOUND
     });
   }
   res.json({
@@ -43,7 +43,7 @@ const createDinosaur = asyncHandler(async (req, res) => {
   });
 
   try {
-    if (req.user && req.user.role === 'admin') {
+    if (req.user && req.user.role === constants.ROLES.ADMIN) {
       await pool.query(
         'INSERT INTO admin_logs (admin_id, action, details) VALUES (?, ?, ?)',
         [req.user.id, 'CREATE_DINOSAUR', `Created dinosaur id=${dinosaurId}, name=${req.body.name}`]
@@ -66,7 +66,7 @@ const updateDinosaur = asyncHandler(async (req, res) => {
   if (affectedRows === 0) {
     return res.status(404).json({
       success: false,
-      error: 'Dinosaur not found'
+      error: constants.ERROR_MESSAGES.NOT_FOUND
     });
   }
 
@@ -79,7 +79,7 @@ const updateDinosaur = asyncHandler(async (req, res) => {
   const details = `Updated dinosaur id=${req.params.id}. Changes: ${changes.join(', ')}`;
 
   try {
-    if (req.user && req.user.role === 'admin') {
+    if (req.user && req.user.role === constants.ROLES.ADMIN) {
       await pool.query(
         'INSERT INTO admin_logs (admin_id, action, details) VALUES (?, ?, ?)',
         [req.user.id, 'UPDATE_DINOSAUR', details]
@@ -100,12 +100,12 @@ const deleteDinosaur = asyncHandler(async (req, res) => {
   if (affectedRows === 0) {
     return res.status(404).json({
       success: false,
-      error: 'Dinosaur not found'
+      error: constants.ERROR_MESSAGES.NOT_FOUND
     });
   }
 
   try {
-    if (req.user && req.user.role === 'admin') {
+    if (req.user && req.user.role === constants.ROLES.ADMIN) {
       await pool.query(
         'INSERT INTO admin_logs (admin_id, action, details) VALUES (?, ?, ?)',
         [req.user.id, 'DELETE_DINOSAUR', `Deleted dinosaur id=${req.params.id}`]

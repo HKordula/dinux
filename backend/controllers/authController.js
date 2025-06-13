@@ -16,8 +16,7 @@ const register = asyncHandler(async (req, res, next) => {
     return res.status(400).json({ success: false, error: 'Email already exists' });
   }
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
+  if (!constants.EMAIL_REGEX.test(email)) {
     return res.status(400).json({ success: false, error: 'Invalid email format' });
   }
 
@@ -50,7 +49,7 @@ const login = asyncHandler(async (req, res, next) => {
     return res.status(401).json({ success: false, error: 'Invalid credentials' });
   }
 
-  if (user.status === 'blocked') {
+  if (user.status === constants.USER_STATUS.BLOCKED) {
     return res.status(403).json({ success: false, error: 'Your account is blocked. Please contact the administrator.' });
   }
 
@@ -59,8 +58,8 @@ const login = asyncHandler(async (req, res, next) => {
   if (!isMatch) {
     await User.incrementFailedLogins(user.id);
     const updatedUser = await User.findByUsername(username);
-    const attemptsLeft = Math.max(0, 10 - updatedUser.failed_logins);
-    if (updatedUser.failed_logins >= 10) {
+    const attemptsLeft = Math.max(0, constants.LOGIN.MAX_FAILED_ATTEMPTS - updatedUser.failed_logins);
+    if (updatedUser.failed_logins >= constants.LOGIN.MAX_FAILED_ATTEMPTS) {
       await User.blockUser(user.id);
       return res.status(403).json({
         success: false,
