@@ -1,5 +1,5 @@
 import express from 'express';
-import { authenticate, authorize } from '../middleware/auth.js';
+import { authenticate, authorizeAdmin } from '../middleware/auth.js';
 import {
   createUser,
   manageUsers,
@@ -24,33 +24,31 @@ import {
   updateSpecies,
   deleteSpecies
 } from '../controllers/speciesController.js';
-import constants from '../config/constants.js';
 
 const router = express.Router();
 
-// Dinosaur management
-router.post('/dinos', authenticate, authorize(constants.ROLES.ADMIN), createDinosaur);
-router.put('/dinos/:id', authenticate, authorize(constants.ROLES.ADMIN), updateDinosaur);
-router.delete('/dinos/:id', authenticate, authorize(constants.ROLES.ADMIN), deleteDinosaur);
-router.get('/metadata/', authenticate, authorize(constants.ROLES.ADMIN), getMetadata);
+// diunos
+router.post('/dinos', authenticate, authorizeAdmin, createDinosaur);
+router.put('/dinos/:id', authenticate, authorizeAdmin, updateDinosaur);
+router.delete('/dinos/:id', authenticate, authorizeAdmin, deleteDinosaur);
+router.get('/metadata/', authenticate, authorizeAdmin, getMetadata);
 
+// users
+router.post('/users', authenticate, authorizeAdmin, createUser);
+router.get('/users', authenticate, authorizeAdmin, manageUsers);
+router.delete('/users/:id', authenticate, authorizeAdmin, deleteUser);
+router.put('/users/:id/status', authenticate, authorizeAdmin, updateUserStatus);
+router.put('/users/:id/reset-password', authenticate, authorizeAdmin, resetUserPassword);
 
-// User management
-router.post('/users', authenticate, authorize(constants.ROLES.ADMIN), createUser);
-router.get('/users', authenticate, authorize(constants.ROLES.ADMIN), manageUsers);
-router.delete('/users/:id', authenticate, authorize(constants.ROLES.ADMIN), deleteUser);
-router.put('/users/:id/status', authenticate, authorize(constants.ROLES.ADMIN), updateUserStatus);
-router.put('/users/:id/reset-password', authenticate, authorize(constants.ROLES.ADMIN), resetUserPassword);
+// species
+router.post('/species', authenticate, authorizeAdmin, createSpecies);
+router.put('/species/:id', authenticate, authorizeAdmin, updateSpecies);
+router.delete('/species/:id', authenticate, authorizeAdmin, deleteSpecies);
 
-// Species
-router.post('/species', authenticate, authorize(constants.ROLES.ADMIN), createSpecies);
-router.put('/species/:id', authenticate, authorize(constants.ROLES.ADMIN), updateSpecies);
-router.delete('/species/:id', authenticate, authorize(constants.ROLES.ADMIN), deleteSpecies);
-
-// Vote session
-router.post('/vote', authenticate, authorize(constants.ROLES.ADMIN), createVoteSession);
-router.put('/vote/:id', authenticate, authorize(constants.ROLES.ADMIN), updateVoteSession);
-router.delete('/vote/:id', authenticate, authorize(constants.ROLES.ADMIN), deleteVoteSession);
-router.get('/vote', authenticate, authorize(constants.ROLES.ADMIN), getAllVoteSessions);
+// vote sessions
+router.post('/vote', authenticate, authorizeAdmin, createVoteSession);
+router.put('/vote/:id', authenticate, authorizeAdmin, updateVoteSession);
+router.delete('/vote/:id', authenticate, authorizeAdmin, deleteVoteSession);
+router.get('/vote', authenticate, authorizeAdmin, getAllVoteSessions);
 
 export default router;

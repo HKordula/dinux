@@ -43,17 +43,13 @@ const authenticate = async (req, res, next) => {
   }
 };
 
-const authorize = (...roles) => {
-  return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
-      const error = new Error(
-        `Role (${req.user.role}) is not allowed to access this resource`
-      );
-      error.statusCode = 403;
-      next(error);
-    }
-    next();
-  };
+const authorizeAdmin = (req, res, next) => {
+  if (!req.user || req.user.role !== constants.ROLES.ADMIN) {
+    const error = new Error('Admin access required');
+    error.statusCode = 403;
+    return next(error);
+  }
+  next();
 };
 
-export { authenticate, authorize };
+export { authenticate, authorizeAdmin };
