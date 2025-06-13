@@ -5,9 +5,7 @@ import constants from '../config/constants.js';
 class User {
   static async findByUsername(username) {
     const [rows] = await pool.query(
-      `SELECT id, username, email, password, role, status
-       FROM users 
-       WHERE username = ?`,
+      'SELECT id, username, email, password, role, status, failed_logins FROM users WHERE username = ? LIMIT 1',
       [username]
     );
     return rows[0];
@@ -98,6 +96,27 @@ class User {
       'SELECT id, username, email, role, status, created_at FROM users ORDER BY id'
     );
     return rows;
+  }
+  
+  static async incrementFailedLogins(userId) {
+    await pool.query(
+      'UPDATE users SET failed_logins = failed_logins + 1 WHERE id = ?',
+      [userId]
+    );
+  }
+
+  static async resetFailedLogins(userId) {
+    await pool.query(
+      'UPDATE users SET failed_logins = 0 WHERE id = ?',
+      [userId]
+    );
+  }
+
+  static async blockUser(userId) {
+    await pool.query(
+      'UPDATE users SET status = "blocked" WHERE id = ?',
+      [userId]
+    );
   }
 }
 

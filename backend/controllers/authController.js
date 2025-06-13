@@ -43,29 +43,40 @@ const register = asyncHandler(async (req, res, next) => {
 const login = asyncHandler(async (req, res, next) => {
   const { username, password } = req.body;
   if (!username || !password) {
-    const error = new Error('Please provide username and password');
-    error.statusCode = 400;
-    throw error;
+    return res.status(400).json({ success: false, error: 'Please provide username and password' });
   }
   const user = await User.findByUsername(username);
   if (!user) {
-    const error = new Error('Invalid credentials');
-    error.statusCode = 401;
-    throw error;
+    return res.status(401).json({ success: false, error: 'Invalid credentials' });
   }
-  // Blocked user check
+
   if (user.status === 'blocked') {
-    return res.status(403).json({
+    return res.status(403).json({ success: false, error: 'Your account is blocked. Please contact the administrator.' });
+  }
+
+  const isMatch = await bcrypt.compare(password, user.password);
+
+  if (!isMatch) {
+    await User.incrementFailedLogins(user.id);
+    const updatedUser = await User.findByUsername(username);
+    const attemptsLeft = Math.max(0, 10 - updatedUser.failed_logins);
+    if (updatedUser.failed_logins >= 10) {
+      await User.blockUser(user.id);
+      return res.status(403).json({
+        success: false,
+        error: 'Your account has been blocked due to too many failed login attempts.',
+        attemptsLeft: 0
+      });
+    }
+    return res.status(401).json({
       success: false,
-      error: 'Your account is blocked. Please contact the administrator.'
+      error: `Invalid credentials. You have ${attemptsLeft} attempt${attemptsLeft === 1 ? '' : 's'} left before your account is blocked.`,
+      attemptsLeft
     });
   }
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) {
-    const error = new Error('Invalid credentials');
-    error.statusCode = 401;
-    throw error;
-  }
+
+  await User.resetFailedLogins(user.id);
+
   const token = jwt.sign(
     { userId: user.id },
     process.env.JWT_SECRET,
