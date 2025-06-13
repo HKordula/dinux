@@ -13,7 +13,6 @@ const logger = (req, res, next) => {
       (Object.keys(query).length ? `  Query: ${JSON.stringify(query)}\n` : '') +
       (Object.keys(body).length ? `  Body: ${JSON.stringify(body)}\n` : '');
 
-    // write to console
     const statusColor = res.statusCode >= 500 ? '\x1b[31m' // red
                   : res.statusCode >= 400 ? '\x1b[33m' // yellow
                   : '\x1b[32m'; // green
@@ -21,7 +20,6 @@ const logger = (req, res, next) => {
 
     console.log(statusColor + logEntry.trim() + resetColor);
 
-    // and append to file
     fs.appendFile(logFile, logEntry, err => {
       if (err) console.error('Failed to write log:', err);
     });

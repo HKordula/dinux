@@ -10,7 +10,6 @@ const getMe = asyncHandler(async (req, res) => {
     return res.status(404).json({ success: false, error: constants.ERROR_MESSAGES.NOT_FOUND });
   }
 
-  // lets not send password :3
   const { password, ...safeUser } = user;
   res.json({ success: true, data: safeUser });
 });

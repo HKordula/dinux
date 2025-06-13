@@ -108,7 +108,6 @@ const updateUserStatus = async (req, res, next) => {
   }
 };
 
-// helper for temp password
 function generateTempPassword(length = 10) {
   const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let pass = '';
@@ -131,7 +130,7 @@ const resetUserPassword = asyncHandler(async (req, res) => {
   res.json({
     success: true,
     message: 'Password reset initiated',
-    tempPassword // temp password for admin to give to user
+    tempPassword
   });
 });
 

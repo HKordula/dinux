@@ -155,11 +155,9 @@ function renderTable(headers, rows, rowRenderer, addBtnText, addBtnHandler, tabl
 
   pageRows.forEach(rowData => table.appendChild(rowRenderer(rowData)));
 
-  // --- Header row with add button, title, and pagination ---
   const headerRow = document.createElement('div');
   headerRow.className = 'dino-table-header-row';
 
-  // Add button (left)
   if (addBtnText && addBtnHandler) {
     const addBtn = createButton(addBtnText, addBtnHandler, 'btn-add');
     headerRow.appendChild(addBtn);
@@ -167,7 +165,6 @@ function renderTable(headers, rows, rowRenderer, addBtnText, addBtnHandler, tabl
     headerRow.appendChild(document.createElement('div'));
   }
 
-  // Pagination (right) -- always show arrows
   const pagination = document.createElement('div');
   pagination.className = 'dino-table-pagination-top';
 
@@ -192,7 +189,6 @@ function renderTable(headers, rows, rowRenderer, addBtnText, addBtnHandler, tabl
 
   headerRow.appendChild(pagination);
 
-  // Insert header row above the table
   dinoTableContainer.appendChild(headerRow);
   dinoTableContainer.appendChild(table);
 }

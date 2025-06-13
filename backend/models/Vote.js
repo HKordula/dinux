@@ -1,5 +1,4 @@
 import pool from '../config/db.js';
-import constants from '../config/constants.js';
 
 class Vote {
   static async castVote(userId, dinosaurId, sessionId) {
@@ -17,7 +16,6 @@ class Vote {
         throw new Error('Invalid dinosaur choice for this session');
       }
 
-      // check if user already voted
       const [existing] = await connection.query(
         'SELECT id FROM votes WHERE user_id = ? AND vote_session_id = ?',
         [userId, sessionId]
@@ -26,7 +24,6 @@ class Vote {
         throw new Error('User already voted in this session');
       }
 
-      // insert vote
       const [result] = await connection.query(
         'INSERT INTO votes (user_id, dinosaur_id, vote_session_id) VALUES (?, ?, ?)',
         [userId, dinosaurId, sessionId]

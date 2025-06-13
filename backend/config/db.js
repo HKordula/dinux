@@ -17,7 +17,6 @@ const pool = mysql.createPool({
   namedPlaceholders: true
 });
 
-// test database connection on apps startup
 pool.getConnection()
   .then(connection => {
     console.log('Connected to MySQL database');

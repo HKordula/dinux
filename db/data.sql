@@ -32,16 +32,12 @@ INSERT INTO species (name, description) VALUES
 ('Sinoceratops zhuchengensis', 'Horned ceratopsian from China.'),
 ('Utahraptor ostrommaysorum', 'Large dromaeosaurid predator.'),
 ('Titanosaurus indicus', 'Large sauropod from the Cretaceous.'),
-
 ('Cotylorhynchus romeri', 'Large, early Permian synapsid.'),
 ('Aquilops americanus', 'Small ceratopsian from the Cretaceous.'),
 ('Quetzalcoatlus northropi', 'Giant pterosaur from the Cretaceous.'),
 ('Dimetrodon grandis', 'Sail-backed Permian synapsid.'),
-
 ('Stygimoloch spinifer', 'Pachycephalosaur with spikes.'),
-
 ('Gigantspinosaurus sichuanensis', 'Stegosaur with huge shoulder spines.'),
-
 ('Dilophosaurus wetherilli', 'Early Jurassic predator with double crest.');
 
 INSERT INTO diets (name, description) VALUES

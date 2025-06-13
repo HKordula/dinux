@@ -3,7 +3,7 @@ const container = document.querySelector('.container');
 
 async function fetchAndDisplayDinosaurs() {
     try {
-        const response = await fetch('/dinos'); // to update
+        const response = await fetch('/dinos');
         if (!response.ok) {
             throw new Error('Failed to fetch dinosaurs');
         }

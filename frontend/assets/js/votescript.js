@@ -91,7 +91,6 @@ const votes2 = results.find(r => Number(r.dinosaur_id) === Number(dino2.id))?.vo
                 );
                 if (res.success) {
                     alert('Vote submitted!');
-                    // Re-render the card
                     const newCard = await createVoteCard(session);
                     card.replaceWith(newCard);
                 } else {

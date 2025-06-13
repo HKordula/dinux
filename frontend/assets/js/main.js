@@ -8,7 +8,6 @@ function includeHTML(id, url, callback) {
 }
 
 function getAssetBase() {
-    // count how many directories deep
     const depth = window.location.pathname.replace(/\/$/, '').split('/').length - 2;
     return depth > 0 ? '../'.repeat(depth) + 'assets/' : 'assets/';
 }
@@ -25,7 +24,6 @@ function setupNavbar() {
     const menu = document.querySelector('.navbar__menu');
     if (!menu) return;
 
-    // always Home
     menu.innerHTML = `
       <li class="navbar__item">
         <a href="/" class="navbar__links">Home</a>
@@ -38,33 +36,31 @@ function setupNavbar() {
       </li>
   `
 
-    //always About
     menu.innerHTML += `
       <li class="navbar__item">
         <a href="/about/how-it-works.html" class="navbar__links">About</a>
       </li>
     `;
     
-    if (!token) { // not logged in, show Sign In
+    if (!token) {
       menu.innerHTML += `
         <li class="navbar__btn">
           <a href="/signin/index.html" class="button">Sign In</a>
         </li>
       `;
-    } else { // logged in, show My profile or sth #FIXME
+    } else {
       menu.innerHTML += `
         <li class="navbar__item">
           <a href="/my-profile/index.html" class="navbar__links">My Profile</a>
         </li>
       `;
-      if (role === 'admin') { // hes an admin, show admin stuff
+      if (role === 'admin') {
         menu.innerHTML += `
           <li class="navbar__item">
             <a href="/admin/index.html" class="navbar__links">Admin</a>
           </li>
         `;
       }
-      // show Logout since hes logged in
       menu.innerHTML += ` 
         <li class="navbar__btn">
           <a href="#" id="logout-btn" class="button">Logout</a>

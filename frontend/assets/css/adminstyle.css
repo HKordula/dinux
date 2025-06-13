@@ -253,7 +253,6 @@
     color: #fff;
 }
 
-/* Space between action buttons in table */
 .dino-table td > button,
 .dino-table td > .btn-edit,
 .dino-table td > .btn-delete {

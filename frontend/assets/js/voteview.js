@@ -23,17 +23,14 @@ async function renderVoteSession() {
         return;
     }
 
-    // Fetch dino info
     const [dino1, dino2] = await Promise.all([
         fetchDino(session.choice1_id),
         fetchDino(session.choice2_id)
     ]);
 
-    // Show vote counts (from session.results or similar)
     const votes1 = session.results?.find(r => r.dinosaur_id === dino1.id)?.vote_count || 0;
     const votes2 = session.results?.find(r => r.dinosaur_id === dino2.id)?.vote_count || 0;
 
-    // Check if user voted (if logged in)
     let userVotedFor = null;
     if (token && session.user_vote) {
         userVotedFor = session.user_vote.dinosaur_id;
@@ -61,7 +58,6 @@ async function renderVoteSession() {
       ${!token ? `<div class="login-prompt">Log in to vote!</div>` : ''}
     `;
 
-    // Add vote button listeners
     section.querySelectorAll('.vote-btn').forEach(btn => {
         btn.onclick = async () => {
             const dinoId = btn.getAttribute('data-dino');

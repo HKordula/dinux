@@ -101,7 +101,7 @@ function showErrorNotification(message) {
   if (!notif) {
     notif = document.createElement('div');
     notif.id = 'dino-notification';
-    notif.className = 'dino-notification'; // Add this line
+    notif.className = 'dino-notification';
     document.body.appendChild(notif);
   }
   notif.textContent = message;
@@ -210,7 +210,6 @@ function renderTable(headers, rows, rowRenderer, addBtnText, addBtnHandler, favo
 
 function dinoRowRenderer(dino, favorites = []) {
   const row = document.createElement('tr');
-  // Resolve names from IDs using metadata
   const speciesName = (metadata.species?.find(s => s.id === dino.species_id) || {}).name || '';
   const dietName = (metadata.diets?.find(d => d.id === dino.diet_id) || {}).name || '';
   const eraName = (metadata.eras?.find(e => e.id === dino.era_id) || {}).name || '';
@@ -358,12 +357,12 @@ async function deleteDino(id) {
   }
 }
 
-let currentView = 'grid'; // 'grid' or 'detail'
+let currentView = 'grid';
 let allDinosCache = null;
 
 // --- CARD RENDERER ---
 function renderDinoCards(dinos, sort = 'default', favorites = [], searchQuery = '') {
-  allDinosCache = dinos; // cache for later use
+  allDinosCache = dinos;
   currentView = 'grid';
   dinoTableContainer.innerHTML = '';
 

@@ -134,7 +134,6 @@ static async update(id, updates) {
     try {
       await connection.beginTransaction();
 
-      // Aktualizacja głównych pól
       if (Object.keys(validFields).length > 0) {
         const setClause = Object.keys(validFields)
           .map(key => `${key} = ?`)
@@ -150,7 +149,6 @@ static async update(id, updates) {
         );
       }
 
-      // Aktualizacja kategorii (many-to-many)
       if (Array.isArray(updates.categories)) {
         await connection.query('DELETE FROM dinosaur_categories WHERE dinosaur_id = ?', [id]);
         if (updates.categories.length > 0) {
@@ -161,7 +159,6 @@ static async update(id, updates) {
         }
       }
 
-      // Aktualizacja środowisk (many-to-many)
       if (Array.isArray(updates.environments)) {
         await connection.query('DELETE FROM dinosaur_environments WHERE dinosaur_id = ?', [id]);
         if (updates.environments.length > 0) {
