@@ -1564,3 +1564,37 @@
     justify-content: flex-start;
     gap: 10px;
 }
+
+/* search bar */
+.center-search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #414833;
+  padding: 24px 0 0 0;
+}
+
+.center-search input[type="text"] {
+  padding: 10px 18px;
+  border-radius: 4px;
+  border: 1.5px solid #7F4F24;
+  font-size: 1rem;
+  width: 320px;
+}
+
+/* error notification */
+.dino-notification {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  background: #d32f2f;
+  color: #fff;
+  padding: 16px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 9999;
+  transition: opacity 0.3s;
+  opacity: 1;
+  pointer-events: none;
+}

@@ -74,6 +74,7 @@ function handleError(msg, error) {
   dinoTableContainer.textContent = msg;
 }
 
+
 // --- METADATA ---
 async function fetchMetadata() {
   const token = localStorage.getItem('token');
@@ -100,18 +101,7 @@ function showErrorNotification(message) {
   if (!notif) {
     notif = document.createElement('div');
     notif.id = 'dino-notification';
-    notif.style.position = 'fixed';
-    notif.style.left = '20px';
-    notif.style.bottom = '20px';
-    notif.style.background = '#d32f2f';
-    notif.style.color = '#fff';
-    notif.style.padding = '16px 24px';
-    notif.style.borderRadius = '8px';
-    notif.style.fontSize = '1rem';
-    notif.style.boxShadow = '0 2px 8px rgba(0,0,0,0.15)';
-    notif.style.zIndex = 9999;
-    notif.style.transition = 'opacity 0.3s';
-    notif.style.opacity = '1';
+    notif.className = 'dino-notification'; // Add this line
     document.body.appendChild(notif);
   }
   notif.textContent = message;
@@ -119,6 +109,28 @@ function showErrorNotification(message) {
   setTimeout(() => {
     notif.style.opacity = '0';
   }, 3500);
+}
+
+// --- Search bar ---
+function filterDinos(dinos, query) {
+  if (!query) return dinos;
+  const q = query.trim().toLowerCase();
+  return dinos.filter(dino => {
+    const envNames = Array.isArray(dino.environments)
+      ? dino.environments.map(e => (typeof e === 'string' ? e : e.name || e)).join(', ')
+      : '';
+    const catNames = Array.isArray(dino.categories)
+      ? dino.categories.map(c => (typeof c === 'string' ? c : c.name || c)).join(', ')
+      : '';
+    return [
+      dino.name,
+      dino.species,
+      dino.diet,
+      dino.era,
+      envNames,
+      catNames
+    ].some(val => (val || '').toString().toLowerCase().includes(q));
+  });
 }
 
 // --- FAVORITES ---
@@ -183,11 +195,12 @@ async function removeFavorite(dinoId, likesDiv, actionsDiv, dino) {
 }
 
 // --- TABLE RENDERERS ---
-function renderTable(headers, rows, rowRenderer, addBtnText, addBtnHandler, favorites = []) {
+function renderTable(headers, rows, rowRenderer, addBtnText, addBtnHandler, favorites = [], query = '') {
   dinoTableContainer.innerHTML = '';
+  const filteredRows = query ? filterDinos(rows, query) : rows;
   const table = document.createElement('table');
   table.appendChild(createHeaderRow(headers));
-  rows.forEach(rowData => table.appendChild(rowRenderer(rowData, favorites)));
+  filteredRows.forEach(rowData => table.appendChild(rowRenderer(rowData, favorites)));
   if (addBtnText && addBtnHandler) {
     const addBtn = createButton(addBtnText, addBtnHandler);
     dinoTableContainer.appendChild(addBtn);
@@ -197,6 +210,10 @@ function renderTable(headers, rows, rowRenderer, addBtnText, addBtnHandler, favo
 
 function dinoRowRenderer(dino, favorites = []) {
   const row = document.createElement('tr');
+  // Resolve names from IDs using metadata
+  const speciesName = (metadata.species?.find(s => s.id === dino.species_id) || {}).name || '';
+  const dietName = (metadata.diets?.find(d => d.id === dino.diet_id) || {}).name || '';
+  const eraName = (metadata.eras?.find(e => e.id === dino.era_id) || {}).name || '';
   const categoryNames = (dino.categories || [])
     .map(id => (metadata.categories.find(c => c.id === id) || {}).name)
     .filter(Boolean)
@@ -208,10 +225,10 @@ function dinoRowRenderer(dino, favorites = []) {
   row.innerHTML = `
     <td>${dino.id}</td>
     <td>${dino.name}</td>
-    <td>${dino.species}</td>
+    <td>${speciesName}</td>
     <td>${dino.description}</td>
-    <td>${dino.era}</td>
-    <td>${dino.diet}</td>
+    <td>${eraName}</td>
+    <td>${dietName}</td>
     <td>${dino.size}</td>
     <td>${dino.weight}</td>
     <td>${environmentNames}</td>
@@ -345,12 +362,17 @@ let currentView = 'grid'; // 'grid' or 'detail'
 let allDinosCache = null;
 
 // --- CARD RENDERER ---
-function renderDinoCards(dinos, sort = 'default', favorites = []) {
+function renderDinoCards(dinos, sort = 'default', favorites = [], searchQuery = '') {
   allDinosCache = dinos; // cache for later use
   currentView = 'grid';
   dinoTableContainer.innerHTML = '';
 
-  let sortedDinos = [...dinos];
+  const searchBar = document.getElementById('dinoSearchBar');
+  if (searchBar) searchBar.style.display = '';
+
+  let filteredDinos = filterDinos(dinos, searchQuery);
+
+  let sortedDinos = [...filteredDinos];
   if (sort === 'az') {
     sortedDinos.sort((a, b) => a.name.localeCompare(b.name));
   } else if (sort === 'za') {
@@ -452,6 +474,9 @@ async function showDinoDetail(dino) {
   const favorites = token ? await getUserFavorites() : [];
   const isFavorite = favorites.includes(dino.id);
 
+ const searchBar = document.getElementById('dinoSearchBar');
+  if (searchBar) searchBar.style.display = 'none';
+
   dinoTableContainer.innerHTML = `
   <div class="dino-detail">
     <img src="${dino.image_url || '../assets/images/default-dino.png'}" alt="${dino.name}" class="dino-detail-img">
@@ -474,6 +499,9 @@ async function showDinoDetail(dino) {
   `;
 
   document.getElementById('backToGridBtn').onclick = () => {
+    
+    const searchBar = document.getElementById('dinoSearchBar');
+    if (searchBar) searchBar.style.display = '';
     history.pushState({}, '', '/dinodex');
     handleRoute();
   };
@@ -575,5 +603,29 @@ document.getElementById('loadDinoTable').addEventListener('click', () => {
   history.pushState({}, '', '/dinodex');
   handleRoute();
 });
-
+document.addEventListener('DOMContentLoaded', () => {
+  const searchInput = document.getElementById('dinoSearchInput');
+  if (searchInput) {
+    searchInput.addEventListener('input', async function () {
+      const query = this.value;
+      if (currentView === 'grid') {
+        const dinos = allDinosCache || (await apiRequest('/api/dinos')).data;
+        const favorites = await getUserFavorites();
+        renderDinoCards(dinos, document.getElementById('dinoSortSelect')?.value || 'default', favorites, query);
+      } else {
+        const dinos = allDinosCache || (await apiRequest('/api/dinos')).data;
+        const favorites = await getUserFavorites();
+        renderTable(
+          ['ID', 'Name', 'Species', 'Description', 'Era', 'Diet', 'Size', 'Weight', 'Environment', 'Category', 'Image', 'Actions'],
+          dinos,
+          dinoRowRenderer,
+          'Dodaj dinozaura',
+          showDinoModal,
+          favorites,
+          query
+        );
+      }
+    });
+  }
+});
 handleRoute();
