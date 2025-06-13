@@ -5,6 +5,7 @@ import Era from '../models/Era.js';
 import Category from '../models/Category.js';
 import Environment from '../models/Environment.js';
 import asyncHandler from '../utils/asyncHandler.js';
+import pool from '../config/db.js';
 
 const getAllDinosaurs = asyncHandler(async (req, res) => {
   const filters = {
@@ -40,6 +41,18 @@ const createDinosaur = asyncHandler(async (req, res) => {
     categories: req.body.categories || [],
     environments: req.body.environments || []
   });
+
+  try {
+    if (req.user && req.user.role === 'admin') {
+      await pool.query(
+        'INSERT INTO admin_logs (admin_id, action, details) VALUES (?, ?, ?)',
+        [req.user.id, 'CREATE_DINOSAUR', `Created dinosaur id=${dinosaurId}, name=${req.body.name}`]
+      );
+    }
+  } catch (err) {
+    console.error('Failed to log admin action:', err);
+  }
+
   res.status(201).json({
     success: true,
     data: { id: dinosaurId }
@@ -47,6 +60,8 @@ const createDinosaur = asyncHandler(async (req, res) => {
 });
 
 const updateDinosaur = asyncHandler(async (req, res) => {
+  const oldDino = await Dinosaur.findById(req.params.id);
+
   const affectedRows = await Dinosaur.update(req.params.id, req.body);
   if (affectedRows === 0) {
     return res.status(404).json({
@@ -54,6 +69,26 @@ const updateDinosaur = asyncHandler(async (req, res) => {
       error: 'Dinosaur not found'
     });
   }
+
+  let changes = [];
+  for (const key in req.body) {
+    if (req.body[key] !== undefined && req.body[key] !== oldDino[key]) {
+      changes.push(`${key}: "${oldDino[key]}" → "${req.body[key]}"`);
+    }
+  }
+  const details = `Updated dinosaur id=${req.params.id}. Changes: ${changes.join(', ')}`;
+
+  try {
+    if (req.user && req.user.role === 'admin') {
+      await pool.query(
+        'INSERT INTO admin_logs (admin_id, action, details) VALUES (?, ?, ?)',
+        [req.user.id, 'UPDATE_DINOSAUR', details]
+      );
+    }
+  } catch (err) {
+    console.error('Failed to log admin action:', err);
+  }
+
   res.json({
     success: true,
     message: 'Dinosaur updated successfully'
@@ -68,6 +103,18 @@ const deleteDinosaur = asyncHandler(async (req, res) => {
       error: 'Dinosaur not found'
     });
   }
+
+  try {
+    if (req.user && req.user.role === 'admin') {
+      await pool.query(
+        'INSERT INTO admin_logs (admin_id, action, details) VALUES (?, ?, ?)',
+        [req.user.id, 'DELETE_DINOSAUR', `Deleted dinosaur id=${req.params.id}`]
+      );
+    }
+  } catch (err) {
+    console.error('Failed to log admin action:', err);
+  }
+
   res.json({
     success: true,
     message: 'Dinosaur deleted successfully'

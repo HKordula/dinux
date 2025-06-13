@@ -403,11 +403,6 @@
     grid-column: 1 / 3;
 }
 
-.modal-content #modalDinoImagePreview {
-    grid-column: 1 / 3;
-    margin-top: 10px;
-}
-
 .modal-content form button[type="submit"],
 .modal-content form button[type="button"] {
     margin-top: 10px;
@@ -480,4 +475,30 @@
 
 .dino-table-container {
   overflow-x: auto;
+}
+
+#voteSessionDescription {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    resize: none;
+    box-sizing: border-box;
+    height: 80px;
+}
+
+#voteResultsModal table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#voteResultsModal th, #voteResultsModal td {
+    border: 1px solid #ddd;
+    padding: 14px 68px;
+    text-align: center;
+    vertical-align: middle;
+}
+#voteResultsModal th {
+    background-color: #4CAF50;
+    color: white;
 }

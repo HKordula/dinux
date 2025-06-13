@@ -33,16 +33,16 @@ class User {
     return rows[0];
   }
 
-  static async create({ username, email, password }) {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const [result] = await pool.query(
-      `INSERT INTO users 
-      (username, email, password)
-      VALUES (?, ?, ?)`,
-      [username, email, hashedPassword]
-    );
-    return result.insertId;
-  }
+  static async create({ username, email, password, role = 'user', status = 'activated' }) {
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const [result] = await pool.query(
+    `INSERT INTO users 
+    (username, email, password, role, status)
+    VALUES (?, ?, ?, ?, ?)`,
+    [username, email, hashedPassword, role, status]
+  );
+  return result.insertId;
+}
 
   static async update(id, updates) {
     const validFields = {};

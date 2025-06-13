@@ -106,3 +106,12 @@ CREATE TABLE IF NOT EXISTS votes (
     FOREIGN KEY (dinosaur_id) REFERENCES dinosaurs(id) ON DELETE CASCADE,
     UNIQUE (user_id, vote_session_id)
 );
+
+CREATE TABLE IF NOT EXISTS admin_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    admin_id INT NOT NULL,
+    action VARCHAR(255) NOT NULL,
+    details TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (admin_id) REFERENCES users(id) ON DELETE CASCADE
+);

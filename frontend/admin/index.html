@@ -75,61 +75,102 @@
     </div>
 
     <!-- User -->
-    <div id="userEditModal" class="modal" style="display:none;">
-    <div class="modal-content">
-        <span class="close" id="closeUserEditModal">&times;</span>
-        <h3>Edytuj rolę użytkownika</h3>
-        <form id="userEditForm">
-        <input type="hidden" id="editUserId">
-        <label>
-            Rola:
-            <select id="editUserRole" required>
-            <option value="user">user</option>
-            <option value="admin">admin</option>
-            </select>
-        </label>
-        <label>
-            Status:
-            <select id="editUserStatus" required>
+    <div id="userAddModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" id="closeUserAddModal">&times;</span>
+            <h3>Add User</h3>
+            <form id="userAddForm">
+            <label>Username:
+                <input type="text" id="addUserUsername" required>
+            </label>
+            <label>Email:
+                <input type="email" id="addUserEmail" required>
+            </label>
+            <label>Password:
+                <input type="password" id="addUserPassword" required>
+            </label>
+            <label>
+                Role:
+                <select id="addUserRole" required>
+                <option value="user">user</option>
+                <option value="admin">admin</option>
+                </select>
+            </label>
+            <label>
+                Status:
+                <select id="addUserStatus" required>
                 <option value="activated">activated</option>
                 <option value="blocked">blocked</option>
-            </select>
-        </label>
-        <div style="margin-top:16px;">
-            <button type="submit">Zapisz</button>
-            <button type="button" id="cancelUserEditModal">Anuluj</button>
+                </select>
+            </label>
+            <div class="button-row">
+                <button type="submit">Save</button>
+                <button type="button" id="cancelUserAddModal">Cancel</button>
+            </div>
+            </form>
         </div>
-        </form>
     </div>
+
+    <div id="userEditModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" id="closeUserEditModal">&times;</span>
+            <h3>Edytuj rolę użytkownika</h3>
+            <form id="userEditForm">
+            <input type="hidden" id="editUserId">
+            <label>
+                Rola:
+                <select id="editUserRole" required>
+                <option value="user">user</option>
+                <option value="admin">admin</option>
+                </select>
+            </label>
+            <label>
+                Status:
+                <select id="editUserStatus" required>
+                    <option value="activated">activated</option>
+                    <option value="blocked">blocked</option>
+                </select>
+            </label>
+            <div style="margin-top:16px;">
+                <button type="submit">Zapisz</button>
+                <button type="button" id="cancelUserEditModal">Anuluj</button>
+            </div>
+            </form>
+        </div>
     </div>
 
     <!-- Vote -->
     <div id="voteSessionModal" class="modal" style="display:none;">
-    <div class="modal-content">
-        <span class="close" id="closeVoteSessionModal">&times;</span>
-        <h3 id="voteSessionModalTitle">Dodaj sesję głosowania</h3>
-        <form id="voteSessionForm">
-        <input type="hidden" id="voteSessionId">
-        <label>Tytuł: <input type="text" id="voteSessionTitle" required></label><br>
-        <label>Opis: <textarea id="voteSessionDescription" required></textarea></label><br>
-        <label>Dinozaur 1:
-            <select id="voteSessionChoice1" required></select>
-        </label><br>
-        <label>Dinozaur 2:
-            <select id="voteSessionChoice2" required></select>
-        </label><br>
-        <div style="margin-top:16px;">
-            <button type="submit">Zapisz</button>
-            <button type="button" id="cancelVoteSessionModal">Anuluj</button>
-        </div>
-        </form>
-    </div>
-    </div>
+        <div class="modal-content">
+            <span class="close" id="closeVoteSessionModal">&times;</span>
+            <h3 id="voteSessionModalTitle">Add Voting Session</h3>
+            <form id="voteSessionForm">
+                <input type="hidden" id="voteSessionId">
 
+                <label class="full-width">Title:
+                    <input type="text" id="voteSessionTitle" required>
+                </label>
+                <label class="full-width">Description:
+                    <textarea id="voteSessionDescription" required></textarea>
+                </label>
+                <label>Dinosaur 1:
+                    <select id="voteSessionChoice1" required></select>
+                </label>
+                <label>Dinosaur 2:
+                    <select id="voteSessionChoice2" required></select>
+                </label>
+                <div class="button-row">
+                    <button type="submit">Save</button>
+                    <button type="button" id="cancelVoteSessionModal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
     <div id="voteResultsModal" class="modal" style="display:none;">
         <div class="modal-content">
             <span class="close" id="closeVoteResultsModal">&times;</span>
-            <h3>Wyniki głosowania</h3>
+            <h3>Voting results</h3>
             <div id="voteResultsContent"></div>
         </div>
     </div>

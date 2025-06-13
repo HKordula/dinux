@@ -1,6 +1,7 @@
 import express from 'express';
 import { authenticate, authorize } from '../middleware/auth.js';
 import {
+  createUser,
   manageUsers,
   updateUserStatus,
   resetUserPassword,
@@ -35,6 +36,7 @@ router.get('/metadata/', authenticate, authorize('admin'), getMetadata);
 
 
 // User management
+router.post('/users', authenticate, authorize('admin'), createUser);
 router.get('/users', authenticate, authorize('admin'), manageUsers);
 router.delete('/users/:id', authenticate, authorize('admin'), deleteUser);
 router.put('/users/:id/status', authenticate, authorize('admin'), updateUserStatus);

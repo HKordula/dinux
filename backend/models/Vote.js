@@ -66,7 +66,8 @@ class Vote {
       dinosaur_id: Number(dino.id),
       name: dino.name,
       vote_count: Number(votes.find(v => Number(v.dinosaur_id) === Number(dino.id))?.vote_count || 0)
-    }));
+    }))
+    .sort((a, b) => b.vote_count - a.vote_count);
   }
 
   static async getUserVotes(userId) {

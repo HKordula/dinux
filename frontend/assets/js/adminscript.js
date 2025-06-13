@@ -22,6 +22,17 @@ const modals = {
     categories: document.getElementById('modalDinoCategories'),
     environments: document.getElementById('modalDinoEnvironments'),
   },
+  userAdd: {
+    modal: document.getElementById('userAddModal'),
+    close: document.getElementById('closeUserAddModal'),
+    form: document.getElementById('userAddForm'),
+    cancel: document.getElementById('cancelUserAddModal'),
+    username: document.getElementById('addUserUsername'),
+    email: document.getElementById('addUserEmail'),
+    password: document.getElementById('addUserPassword'),
+    role: document.getElementById('addUserRole'),
+    status: document.getElementById('addUserStatus'),
+  },
   user: {
     modal: document.getElementById('userEditModal'),
     close: document.getElementById('closeUserEditModal'),
@@ -285,7 +296,7 @@ async function fetchAndDisplayUsersTable() {
   }
 }
 
-function showUserAddModal() {
+function showUserEditModal() {
   const m = modals.user;
   m.modal.style.display = 'block';
   m.form.reset();
@@ -453,7 +464,7 @@ async function updateUserRoleAndStatus(userId, newRole, newStatus) {
 function showVoteSessionModal(session = null) {
   const m = modals.voteSession;
   m.modal.style.display = 'block';
-  m.title.textContent = session ? 'Edit voting session' : 'Add voting session';
+  m.title.textContent = session && session.id ? 'Edit voting session' : 'Add voting session';
   m.form.reset();
   m.id.value = session?.id || '';
   m.name.value = session?.title || '';
@@ -539,6 +550,40 @@ function hideAllModals() {
     if (m.modal) m.modal.style.display = 'none';
   });
 }
+
+function showUserAddModal() {
+  const m = modals.userAdd;
+  m.modal.style.display = 'block';
+  m.form.reset();
+  m.role.value = 'user';
+  m.status.value = 'activated';
+}
+function hideUserAddModal() {
+  modals.userAdd.modal.style.display = 'none';
+}
+modals.userAdd.close.onclick = hideUserAddModal;
+modals.userAdd.cancel.onclick = hideUserAddModal;
+
+modals.userAdd.form.addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const token = localStorage.getItem('token');
+  const user = {
+    username: modals.userAdd.username.value,
+    email: modals.userAdd.email.value,
+    password: modals.userAdd.password.value,
+    role: modals.userAdd.role.value,
+    status: modals.userAdd.status.value
+  };
+  try {
+    const result = await apiRequest('/api/admin/users', 'POST', user, token);
+    if (!result.success) throw new Error(result.error || 'Failed to add user');
+    alert('User added!');
+    hideUserAddModal();
+    fetchAndDisplayUsersTable();
+  } catch (error) {
+    alert('Error adding user.');
+  }
+});
 
 // --- EVENT LISTENERS ---
 async function showDinosWithMetadata() {
